@@ -59,6 +59,17 @@ $link .= ($recipient === 'admin') ? '/administrator/index.php?option=' . strtolo
 				</span>
 			</div>
 		<?php endif; ?>
+		<?php if (!empty($order->contacts)): ?>
+			<?php foreach ($order->contacts as $key => $value):
+				$langKey = $constant . '_' . $key; ?>
+				<div>
+					<strong>
+						<?php echo (Factory::getLanguage()->hasKey($langKey)) ?
+							Text::_($langKey) : $key; ?>: </strong>
+					<span><?php echo $value; ?></span>
+				</div>
+			<?php endforeach; ?>
+		<?php endif; ?>
 	</div>
 	<table style="width: 100%; border: 1px solid #ddd; border-collapse: collapse;border-spacing: 0;">
 		<thead>
