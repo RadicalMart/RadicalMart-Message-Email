@@ -11,6 +11,8 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 
@@ -27,9 +29,11 @@ extract($displayData);
  *
  */
 
-$link = Uri::getInstance('site')->toString(array('scheme', 'host', 'port'));
-$link .= ($recipient === 'admin') ? '/administrator/index.php?option=' . strtolower($constant)
+$component = strtolower($constant);
+$link      = Uri::getInstance('site')->toString(array('scheme', 'host', 'port'));
+$link      .= ($recipient === 'admin') ? '/administrator/index.php?option=' . $component
 	. '&task=order.edit&id=' . $order->id : $order->link;
+$params    = ComponentHelper::getParams($component);
 ?>
 	<h1>
 		<a href="<?php echo $link; ?>">
@@ -61,11 +65,17 @@ $link .= ($recipient === 'admin') ? '/administrator/index.php?option=' . strtolo
 		<?php endif; ?>
 		<?php if (!empty($order->contacts)): ?>
 			<?php foreach ($order->contacts as $key => $value):
-				$langKey = $constant . '_' . $key; ?>
+				if (empty(trim($value))) continue;
+
+				if ($label = $params->get('fields_' . $key . '_label')) $label = Text::_($label);
+				elseif (Factory::getLanguage()->hasKey($constant . '_' . $key))
+				{
+					$label = Text::_($constant . '_' . $key);
+				}
+				else $label = $key;
+				?>
 				<div>
-					<strong>
-						<?php echo (Factory::getLanguage()->hasKey($langKey)) ?
-							Text::_($langKey) : $key; ?>: </strong>
+					<strong><?php echo $label ?>: </strong>
 					<span><?php echo $value; ?></span>
 				</div>
 			<?php endforeach; ?>
