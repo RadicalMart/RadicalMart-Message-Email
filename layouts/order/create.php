@@ -31,8 +31,8 @@ extract($displayData);
 
 $component = strtolower($constant);
 $link      = Uri::getInstance('site')->toString(array('scheme', 'host', 'port'));
-$link      .= ($recipient === 'admin') ? '/administrator/index.php?option=' . $component
-	. '&task=order.edit&id=' . $order->id : $order->link;
+$link      .= ($recipient === 'admin') ? '/administrator/index.php?option=' . $component . '&task=order.edit&id='
+	. $order->id : $order->link;
 $params    = ComponentHelper::getParams($component);
 ?>
 	<h1>

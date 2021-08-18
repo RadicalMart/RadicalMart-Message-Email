@@ -58,7 +58,6 @@ class plgRadicalMart_MessageEmail extends CMSPlugin
 			$constant .= '_EXPRESS';
 		}
 
-
 		if ($type === 'order.create' || $type === 'order.change_status'
 			|| $type === 'express.order.create' || $type === 'express.order.change_status')
 		{
