@@ -2,7 +2,7 @@
 /*
  * @package     RadicalMart Package
  * @subpackage  plg_radicalmart_message_email
- * @version     __DEPLOY_VERSION__
+ * @version     0.2.0
  * @author      Delo Design - delo-design.ru
  * @copyright   Copyright (c) 2021 Delo Design. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -11,6 +11,8 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 
@@ -27,9 +29,11 @@ extract($displayData);
  *
  */
 
-$link = Uri::getInstance('site')->toString(array('scheme', 'host', 'port'));
-$link .= ($recipient === 'admin') ? '/administrator/index.php?option=' . strtolower($constant)
-	. '&task=order.edit&id=' . $order->id : $order->link;
+$component = strtolower($constant);
+$link      = Uri::getInstance('site')->toString(array('scheme', 'host', 'port'));
+$link      .= ($recipient === 'admin') ? '/administrator/index.php?option=' . $component . '&task=order.edit&id='
+	. $order->id : $order->link;
+$params    = ComponentHelper::getParams($component);
 ?>
 	<h1>
 		<a href="<?php echo $link; ?>">
@@ -58,6 +62,23 @@ $link .= ($recipient === 'admin') ? '/administrator/index.php?option=' . strtolo
 						$order->payment->order->title : $order->payment->title; ?>
 				</span>
 			</div>
+		<?php endif; ?>
+		<?php if (!empty($order->contacts)): ?>
+			<?php foreach ($order->contacts as $key => $value):
+				if (empty(trim($value))) continue;
+
+				if ($label = $params->get('fields_' . $key . '_label')) $label = Text::_($label);
+				elseif (Factory::getLanguage()->hasKey($constant . '_' . $key))
+				{
+					$label = Text::_($constant . '_' . $key);
+				}
+				else $label = $key;
+				?>
+				<div>
+					<strong><?php echo $label ?>: </strong>
+					<span><?php echo $value; ?></span>
+				</div>
+			<?php endforeach; ?>
 		<?php endif; ?>
 	</div>
 	<table style="width: 100%; border: 1px solid #ddd; border-collapse: collapse;border-spacing: 0;">

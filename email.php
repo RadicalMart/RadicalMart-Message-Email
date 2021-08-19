@@ -2,7 +2,7 @@
 /*
  * @package     RadicalMart Package
  * @subpackage  plg_radicalmart_message_email
- * @version     __DEPLOY_VERSION__
+ * @version     0.2.0
  * @author      Delo Design - delo-design.ru
  * @copyright   Copyright (c) 2021 Delo Design. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -57,7 +57,6 @@ class plgRadicalMart_MessageEmail extends CMSPlugin
 		{
 			$constant .= '_EXPRESS';
 		}
-
 
 		if ($type === 'order.create' || $type === 'order.change_status'
 			|| $type === 'express.order.create' || $type === 'express.order.change_status')
