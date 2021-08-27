@@ -76,7 +76,7 @@ $params    = ComponentHelper::getParams($component);
 				?>
 				<div>
 					<strong><?php echo $label ?>: </strong>
-					<span><?php echo $value; ?></span>
+					<span><?php echo nl2br($value); ?></span>
 				</div>
 			<?php endforeach; ?>
 		<?php endif; ?>
