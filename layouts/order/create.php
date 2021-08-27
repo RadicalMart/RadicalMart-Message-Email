@@ -2,7 +2,7 @@
 /*
  * @package     RadicalMart Package
  * @subpackage  plg_radicalmart_message_email
- * @version     0.2.0
+ * @version     1.0.0
  * @author      Delo Design - delo-design.ru
  * @copyright   Copyright (c) 2021 Delo Design. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -76,7 +76,7 @@ $params    = ComponentHelper::getParams($component);
 				?>
 				<div>
 					<strong><?php echo $label ?>: </strong>
-					<span><?php echo $value; ?></span>
+					<span><?php echo nl2br($value); ?></span>
 				</div>
 			<?php endforeach; ?>
 		<?php endif; ?>

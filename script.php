@@ -2,7 +2,7 @@
 /*
  * @package     RadicalMart Package
  * @subpackage  plg_radicalmart_message_email
- * @version     0.2.0
+ * @version     1.0.0
  * @author      Delo Design - delo-design.ru
  * @copyright   Copyright (c) 2021 Delo Design. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -32,7 +32,7 @@ class PlgRadicalMart_MessageEmailInstallerScript
 	 *
 	 * @return  boolean True on success, False on failure.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	function postflight($type, $parent)
 	{
@@ -50,7 +50,7 @@ class PlgRadicalMart_MessageEmailInstallerScript
 	 *
 	 * @param   InstallerAdapter  $parent  Parent object calling object.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	protected function enablePlugin($parent)
 	{
@@ -73,7 +73,7 @@ class PlgRadicalMart_MessageEmailInstallerScript
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	public function parseLayouts(SimpleXMLElement $element, $installer)
 	{
@@ -119,7 +119,7 @@ class PlgRadicalMart_MessageEmailInstallerScript
 	 *
 	 * @param   InstallerAdapter  $parent  Parent object calling object.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	public function uninstall($parent)
 	{
@@ -134,7 +134,7 @@ class PlgRadicalMart_MessageEmailInstallerScript
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	protected function removeLayouts(SimpleXMLElement $element)
 	{
