@@ -37,7 +37,7 @@ $params    = ComponentHelper::getParams($component);
 ?>
 	<h1>
 		<a href="<?php echo $link; ?>">
-			<?php echo Text::sprintf('PLG_RADICALMART_MESSAGE_ORDER_INFORMATION', $order->number); ?>
+			<?php echo Text::sprintf('PLG_RADICALMART_MESSAGE_EMAIL_ORDER_INFORMATION', $order->number); ?>
 		</a>
 	</h1>
 	<div style="margin-bottom: 20px;">

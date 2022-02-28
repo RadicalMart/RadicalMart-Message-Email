@@ -65,8 +65,8 @@ class plgRadicalMart_MessageEmail extends CMSPlugin
 			$layout  = ($type === 'order.create' || $type === 'express.order.create')
 				? 'create' : 'status';
 			$subject = ($type === 'order.create' || $type === 'express.order.create')
-				? Text::sprintf('PLG_RADICALMART_MESSAGE_ORDER_CREATE', $data->number)
-				: Text::sprintf('PLG_RADICALMART_MESSAGE_ORDER_CHANGE_STATUS', $data->number, Text::_($data->status->title));
+				? Text::sprintf('PLG_RADICALMART_MESSAGE_EMAIL_ORDER_CREATE', $data->number)
+				: Text::sprintf('PLG_RADICALMART_MESSAGE_EMAIL_ORDER_CHANGE_STATUS', $data->number, Text::_($data->status->title));
 
 			$links = true;
 			if (($type === 'express.order.create' || $type === 'express.order.change_status') && $data->status->id !== 2)
@@ -90,7 +90,7 @@ class plgRadicalMart_MessageEmail extends CMSPlugin
 		elseif (($type === 'user.create' || $type === 'express.user.create') && !empty($data['result']))
 		{
 			// Prepare data
-			$subject   = Text::sprintf('PLG_RADICALMART_MESSAGE_USER_CREATE', $data['user']->name,
+			$subject   = Text::sprintf('PLG_RADICALMART_MESSAGE_EMAIL_USER_CREATE', $data['user']->name,
 				Uri::getInstance()->getHost());
 			$recipient = $data['user']->email;
 			$body      = RadicalMartHelperMessage::renderLayout('email.user.create',

@@ -28,20 +28,20 @@ extract($displayData);
 $site = Uri::getInstance()->getHost();
 ?>
 <div>
-	<?php echo Text::sprintf('PLG_RADICALMART_MESSAGE_USER_CREATE_TITLE', $user['user']->name, $site); ?>
+	<?php echo Text::sprintf('PLG_RADICALMART_MESSAGE_EMAIL_USER_CREATE_TITLE', $user['user']->name, $site); ?>
 </div>
 <div>
-	<?php echo Text::sprintf('PLG_RADICALMART_MESSAGE_USER_CREATE_DESC', $site); ?>
+	<?php echo Text::sprintf('PLG_RADICALMART_MESSAGE_EMAIL_USER_CREATE_DESC', $site); ?>
 </div>
 <div>
-	<span><?php echo Text::_('PLG_RADICALMART_MESSAGE_USER_LOGIN'); ?> </span>
+	<span><?php echo Text::_('PLG_RADICALMART_MESSAGE_EMAIL_USER_LOGIN'); ?> </span>
 	<code>
 		<?php echo (!empty($user['data']['phone'])) ? $user['data']['phone']
 			: $user['user']->username; ?>
 	</code>
 </div>
 <div>
-	<span><?php echo Text::_('PLG_RADICALMART_MESSAGE_USER_PASSWORD'); ?> </span>
+	<span><?php echo Text::_('PLG_RADICALMART_MESSAGE_EMAIL_USER_PASSWORD'); ?> </span>
 	<code>
 		<?php echo $user['data']['newPassword']; ?>
 	</code>
