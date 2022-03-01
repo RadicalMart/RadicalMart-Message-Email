@@ -25,7 +25,7 @@
 		<folder>order</folder>
 	</layouts>
 	<updateservers>
-		<server type="extension" priority="1" name="RadicalMart Message - Email">
+		<server type="extension" priority="1" name="RadicalMart Message: Email">
 			https://radicalmart.ru/update?element=plg_radicalmart_message_email
 		</server>
 	</updateservers>
