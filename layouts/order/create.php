@@ -15,6 +15,7 @@ use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Registry\Registry;
 
 extract($displayData);
 
@@ -22,18 +23,19 @@ extract($displayData);
  * Layout variables
  * -----------------
  *
- * @var  object  $order     The order id.
- * @var  string  $recipient Mail recipient.
- * @var  string  $constant  Language constant.
- * @var  boolean $links     Products links.
+ * @var  object   $order     The order id.
+ * @var  string   $recipient Mail recipient.
+ * @var  string   $constant  Language constant.
+ * @var  string   $component Component name constant.
+ * @var  boolean  $links     Products links.
+ * @var  Registry $params    Component params.
  *
  */
 
-$component = strtolower($constant);
-$link      = Uri::getInstance('site')->toString(array('scheme', 'host', 'port'));
-$link      .= ($recipient === 'admin') ? '/administrator/index.php?option=' . $component . '&task=order.edit&id='
+
+$link   = Uri::getInstance('site')->toString(array('scheme', 'host', 'port'));
+$link   .= ($recipient === 'admin') ? '/administrator/index.php?option=' . $component . '&task=order.edit&id='
 	. $order->id : $order->link;
-$params    = ComponentHelper::getParams($component);
 ?>
 	<h1>
 		<a href="<?php echo $link; ?>">
@@ -45,7 +47,7 @@ $params    = ComponentHelper::getParams($component);
 			<strong><?php echo Text::_($constant . '_STATUS'); ?>: </strong>
 			<span><?php echo Text::_($order->status->title); ?></span>
 		</div>
-		<?php if ($order->shipping): ?>
+		<?php if (!empty($order->shipping)): ?>
 			<div>
 				<strong><?php echo Text::_($constant . '_SHIPPING'); ?>: </strong>
 				<span>
@@ -54,7 +56,7 @@ $params    = ComponentHelper::getParams($component);
 				</span>
 			</div>
 		<?php endif; ?>
-		<?php if ($order->payment): ?>
+		<?php if (!empty($order->payment)): ?>
 			<div>
 				<strong><?php echo Text::_($constant . '_PAYMENT'); ?>: </strong>
 				<span>

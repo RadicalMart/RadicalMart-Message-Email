@@ -51,8 +51,8 @@ class plgRadicalMart_MessageEmail extends CMSPlugin
 	 */
 	public function onRadicalMartPrepareConfigForm($form, $data)
 	{
-			Form::addFormPath(__DIR__ . '/forms');
-			$form->loadFile('radicalmart');
+		Form::addFormPath(__DIR__ . '/forms');
+		$form->loadFile('radicalmart');
 	}
 
 	/**
@@ -115,8 +115,14 @@ class plgRadicalMart_MessageEmail extends CMSPlugin
 			if (!empty($data->contacts['email']))
 			{
 				$this->sendEmail($subject, $data->contacts['email'],
-					RadicalMartHelperMessage::renderLayout('email.order.' . $layout,
-						array('recipient' => 'client', 'order' => $data, 'constant' => $constant, 'links' => $links)));
+					RadicalMartHelperMessage::renderLayout('email.order.' . $layout, array(
+						'recipient' => 'client',
+						'order'     => $data,
+						'constant'  => $constant,
+						'component' => $component,
+						'params'    => $params,
+						'links'     => $links
+					)));
 			}
 
 			// Send admin email
@@ -131,8 +137,14 @@ class plgRadicalMart_MessageEmail extends CMSPlugin
 			if (empty($adminEmails)) $adminEmails[] = $config->get('replyto', $config->get('mailfrom'));
 
 			$this->sendEmail($subject, $adminEmails,
-				RadicalMartHelperMessage::renderLayout('email.order.' . $layout,
-					array('recipient' => 'admin', 'order' => $data, 'constant' => $constant, 'links' => $links)));
+				RadicalMartHelperMessage::renderLayout('email.order.' . $layout, array(
+					'recipient' => 'admin',
+					'order'     => $data,
+					'constant'  => $constant,
+					'component' => $component,
+					'params'    => $params,
+					'links'     => $links
+				)));
 		}
 		elseif (($type === 'user.create' || $type === 'express.user.create') && !empty($data['result']))
 		{
