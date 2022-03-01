@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fieldset name="messages" label="COM_RADICALMART_EXPRESS_PARAMS_MESSAGES">
+		<field type="note" label="PLG_RADICALMART_MESSAGE_EMAIL"
+			   description="PLG_RADICALMART_MESSAGE_EMAIL_DESCRIPTION"/>
+		<field name="messages_email_admin" type="subform"
+			   label="PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_ADMIN"
+			   multiple="true">
+			<form>
+				<field name="email" type="email" label="COM_RADICALMART_EXPRESS_EMAIL" required="true"/>
+			</form>
+		</field>
+	</fieldset>
+</form>

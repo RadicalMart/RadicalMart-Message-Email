@@ -2,7 +2,7 @@
 /*
  * @package     RadicalMart Package
  * @subpackage  plg_radicalmart_message_email
- * @version     1.0.0
+ * @version     1.1.0
  * @author      Delo Design - delo-design.ru
  * @copyright   Copyright (c) 2021 Delo Design. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -15,6 +15,7 @@ use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Registry\Registry;
 
 extract($displayData);
 
@@ -22,22 +23,22 @@ extract($displayData);
  * Layout variables
  * -----------------
  *
- * @var  object  $order     The order id.
- * @var  string  $recipient Mail recipient.
- * @var  string  $constant  Language constant.
- * @var  boolean $links     Products links.
+ * @var  object   $order     The order id.
+ * @var  string   $recipient Mail recipient.
+ * @var  string   $constant  Language constant.
+ * @var  string   $component Component name constant.
+ * @var  boolean  $links     Products links.
+ * @var  Registry $params    Component params.
  *
  */
 
-$component = strtolower($constant);
-$link      = Uri::getInstance('site')->toString(array('scheme', 'host', 'port'));
+$link      = Uri::getInstance()->toString(array('scheme', 'host', 'port'));
 $link      .= ($recipient === 'admin') ? '/administrator/index.php?option=' . $component . '&task=order.edit&id='
 	. $order->id : $order->link;
-$params    = ComponentHelper::getParams($component);
 ?>
 	<h1>
 		<a href="<?php echo $link; ?>">
-			<?php echo Text::sprintf('PLG_RADICALMART_MESSAGE_ORDER_INFORMATION', $order->number); ?>
+			<?php echo Text::sprintf('PLG_RADICALMART_MESSAGE_EMAIL_ORDER_INFORMATION', $order->number); ?>
 		</a>
 	</h1>
 	<div style="margin-bottom: 20px;">
@@ -45,7 +46,7 @@ $params    = ComponentHelper::getParams($component);
 			<strong><?php echo Text::_($constant . '_STATUS'); ?>: </strong>
 			<span><?php echo Text::_($order->status->title); ?></span>
 		</div>
-		<?php if ($order->shipping): ?>
+		<?php if (!empty($order->shipping)): ?>
 			<div>
 				<strong><?php echo Text::_($constant . '_SHIPPING'); ?>: </strong>
 				<span>
@@ -54,7 +55,7 @@ $params    = ComponentHelper::getParams($component);
 				</span>
 			</div>
 		<?php endif; ?>
-		<?php if ($order->payment): ?>
+		<?php if (!empty($order->payment)): ?>
 			<div>
 				<strong><?php echo Text::_($constant . '_PAYMENT'); ?>: </strong>
 				<span>
