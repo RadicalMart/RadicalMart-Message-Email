@@ -32,7 +32,7 @@ extract($displayData);
  *
  */
 
-$link      = Uri::getInstance('site')->toString(array('scheme', 'host', 'port'));
+$link      = Uri::getInstance()->toString(array('scheme', 'host', 'port'));
 $link      .= ($recipient === 'admin') ? '/administrator/index.php?option=' . $component . '&task=order.edit&id='
 	. $order->id : $order->link;
 ?>
