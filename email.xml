@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension version="3.9" type="plugin" group="radicalmart_message" method="upgrade">
-	<name>PLG_RADICALMART_MESSAGE_EMAIL_EMAIL</name>
+	<name>PLG_RADICALMART_MESSAGE_EMAIL</name>
 	<author>Delo Design</author>
 	<creationDate>August 2021</creationDate>
 	<copyright>Copyright © 2021 Delo Design. All rights reserved.</copyright>
@@ -8,7 +8,7 @@
 	<authorEmail>boss@delo-design.ru</authorEmail>
 	<authorUrl>https://delo-design.ru</authorUrl>
 	<version>1.0.1-dev</version>
-	<description>PLG_RADICALMART_MESSAGE_EMAIL_EMAIL_DESCRIPTION</description>
+	<description>PLG_RADICALMART_MESSAGE_EMAIL_DESCRIPTION</description>
 	<scriptfile>script.php</scriptfile>
 	<languages folder="language">
 		<language tag="en-GB">en-GB/en-GB.plg_radicalmart_message_email.ini</language>
@@ -18,6 +18,7 @@
 	</languages>
 	<files>
 		<filename plugin="email">email.php</filename>
+		<folder>forms</folder>
 	</files>
 	<layouts destination="components/radicalmart/message/email" folder="layouts">
 		<folder>user</folder>
