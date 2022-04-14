@@ -185,10 +185,7 @@ class plgRadicalMart_MessageEmail extends CMSPlugin
 		$mailer->isHtml(true);
 		$mailer->Encoding = 'base64';
 		$mailer->addRecipient($recipient);
-		$mailer->addReplyTo(array(
-			$config->get('replyto'),
-			$config->get('replytoname')
-		));
+		$mailer->addReplyTo($config->get('replyto'), $config->get('replytoname'));
 		$mailer->setBody($body);
 
 		return $mailer->Send();
