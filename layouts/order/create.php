@@ -2,7 +2,7 @@
 /*
  * @package     RadicalMart Package
  * @subpackage  plg_radicalmart_message_email
- * @version     1.1.0
+ * @version     1.1.1
  * @author      Delo Design - delo-design.ru
  * @copyright   Copyright (c) 2021 Delo Design. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -33,8 +33,9 @@ extract($displayData);
  */
 
 
-$link   = Uri::getInstance()->toString(array('scheme', 'host', 'port'));
-$link   .= ($recipient === 'admin') ? '/administrator/index.php?option=' . $component . '&task=order.edit&id='
+$root = Uri::getInstance()->toString(array('scheme', 'host', 'port'));
+$link = $root;
+$link .= ($recipient === 'admin') ? '/administrator/index.php?option=' . $component . '&task=order.edit&id='
 	. $order->id : $order->link;
 ?>
 	<h1>
@@ -111,7 +112,7 @@ $link   .= ($recipient === 'admin') ? '/administrator/index.php?option=' . $comp
 			<tr>
 				<td style="<?php echo $style; ?>">
 					<?php if ($product->link && $links) : ?>
-						<a href="<?php echo $product->link; ?>" style="word-wrap:break-word;"
+						<a href="<?php echo $root . $product->link; ?>" style="word-wrap:break-word;"
 						   class="uk-link-reset"><?php echo $product->title; ?></a>
 					<?php else: ?>
 						<?php echo $product->title; ?>
@@ -146,6 +147,41 @@ $link   .= ($recipient === 'admin') ? '/administrator/index.php?option=' . $comp
 				</td>
 			</tr>
 		<?php endforeach; ?>
+		<?php if (!empty($order->shipping) && !empty($order->shipping->order) && !empty($order->shipping->order->price)):
+			$style = 'padding: 8px; line-height: 18px; text-align: left; vertical-align: top;border-top: 1px solid #ddd;';
+			if ($i % 2) $style .= 'background-color: #f9f9f9;';
+			$i++;
+			?>
+			<tr>
+				<td style="<?php echo $style; ?>">
+					<?php echo (!empty($order->shipping->order->title)) ?
+						$order->shipping->order->title : $order->shipping->title; ?>
+				</td>
+				<td style="<?php echo $style; ?> text-align: right;border-left: 1px solid #ddd;">
+					<?php if (!empty($order->shipping->order->price['discount_enable'])): ?>
+						<div style="font-size: 12px; color: #ccc">
+							<s><?php echo $order->shipping->order->price['base_seo']; ?></s>
+							<?php echo ' ( - ' . $order->shipping->order->price['discount_seo'] . ')'; ?>
+						</div>
+					<?php endif; ?>
+					<div>
+						<?php echo str_replace(' ', '&nbsp;', $order->shipping->order->price['final_seo']); ?>
+					</div>
+				</td>
+				<td style="<?php echo $style; ?> text-align: center;border-left: 1px solid #ddd;">1</td>
+				<td style="<?php echo $style; ?> text-align: right;border-left: 1px solid #ddd;">
+					<?php if (!empty($order->shipping->order->price['discount_enable'])): ?>
+						<div style="font-size: 12px; color: #ccc">
+							<s><?php echo $order->shipping->order->price['base_seo']; ?></s>
+							<?php echo ' ( - ' . $order->shipping->order->price['discount_seo'] . ')'; ?>
+						</div>
+					<?php endif; ?>
+					<div>
+						<?php echo str_replace(' ', '&nbsp;', $order->shipping->order->price['final_seo']); ?>
+					</div>
+				</td>
+			</tr>
+		<?php endif; ?>
 		</tbody>
 		<tfoot>
 		<tr>

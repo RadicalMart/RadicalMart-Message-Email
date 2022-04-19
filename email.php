@@ -2,7 +2,7 @@
 /*
  * @package     RadicalMart Package
  * @subpackage  plg_radicalmart_message_email
- * @version     1.1.0
+ * @version     1.1.1
  * @author      Delo Design - delo-design.ru
  * @copyright   Copyright (c) 2021 Delo Design. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -185,10 +185,7 @@ class plgRadicalMart_MessageEmail extends CMSPlugin
 		$mailer->isHtml(true);
 		$mailer->Encoding = 'base64';
 		$mailer->addRecipient($recipient);
-		$mailer->addReplyTo(array(
-			$config->get('replyto'),
-			$config->get('replytoname')
-		));
+		$mailer->addReplyTo($config->get('replyto'), $config->get('replytoname'));
 		$mailer->setBody($body);
 
 		return $mailer->Send();
