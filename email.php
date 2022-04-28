@@ -68,7 +68,7 @@ class plgRadicalMart_MessageEmail extends CMSPlugin
 	public function onRadicalMartExpressPrepareConfigForm($form, $data)
 	{
 		Form::addFormPath(__DIR__ . '/forms');
-		$form->loadFile('radicalmart');
+		$form->loadFile('express');
 	}
 
 	/**
