@@ -92,6 +92,10 @@ class plgRadicalMart_MessageEmail extends CMSPlugin
 		{
 			$constant  .= '_EXPRESS';
 			$component .= '_express';
+			$helper = 'RadicalMartHelperMessage';
+		}
+		else {
+			$helper = '\\Joomla\\Component\\RadicalMart\\Administrator\\Helper\\MessageHelper';
 		}
 		$params = ComponentHelper::getParams($component);
 
@@ -115,7 +119,7 @@ class plgRadicalMart_MessageEmail extends CMSPlugin
 			if (!empty($data->contacts['email']))
 			{
 				$this->sendEmail($subject, $data->contacts['email'],
-					RadicalMartHelperMessage::renderLayout('email.order.' . $layout, array(
+					$helper::renderLayout('email.order.' . $layout, array(
 						'recipient' => 'client',
 						'order'     => $data,
 						'constant'  => $constant,
@@ -137,7 +141,7 @@ class plgRadicalMart_MessageEmail extends CMSPlugin
 			if (empty($adminEmails)) $adminEmails[] = $config->get('replyto', $config->get('mailfrom'));
 
 			$this->sendEmail($subject, $adminEmails,
-				RadicalMartHelperMessage::renderLayout('email.order.' . $layout, array(
+				$helper::renderLayout('email.order.' . $layout, array(
 					'recipient' => 'admin',
 					'order'     => $data,
 					'constant'  => $constant,
@@ -152,7 +156,7 @@ class plgRadicalMart_MessageEmail extends CMSPlugin
 			$subject   = Text::sprintf('PLG_RADICALMART_MESSAGE_EMAIL_USER_CREATE', $data['user']->name,
 				Uri::getInstance()->getHost());
 			$recipient = $data['user']->email;
-			$body      = RadicalMartHelperMessage::renderLayout('email.user.create',
+			$body      = $helper::renderLayout('email.user.create',
 				array('user' => $data, 'constant' => $constant));
 
 			// Send email
@@ -185,7 +189,7 @@ class plgRadicalMart_MessageEmail extends CMSPlugin
 		$mailer->isHtml(true);
 		$mailer->Encoding = 'base64';
 		$mailer->addRecipient($recipient);
-		$mailer->addReplyTo($config->get('replyto'), $config->get('replytoname'));
+		//$mailer->addReplyTo($config->get('replyto'), $config->get('replytoname'));
 		$mailer->setBody($body);
 
 		return $mailer->Send();
