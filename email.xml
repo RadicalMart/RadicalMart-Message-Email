@@ -20,13 +20,13 @@
 		<filename plugin="email">email.php</filename>
 		<folder>forms</folder>
 	</files>
-	<layouts destination="components/radicalmart/message/email" folder="layouts">
-		<folder>user</folder>
-		<folder>order</folder>
+	<layouts destination="plugins/radicalmart_message/email" folder="layouts">
+		<folder>radicalmart</folder>
+		<folder>radicalmart_express</folder>
 	</layouts>
 	<updateservers>
 		<server type="extension" priority="1" name="RadicalMart Message: Email">
-			https://radicalmart.ru/update?element=plg_radicalmart_message_email
+			https://sovmart.ru/update?element=plg_radicalmart_message_email
 		</server>
 	</updateservers>
 </extension>

@@ -25,17 +25,14 @@ extract($displayData);
  *
  * @var  object   $order     The order id.
  * @var  string   $recipient Mail recipient.
- * @var  string   $constant  Language constant.
- * @var  string   $component Component name constant.
  * @var  boolean  $links     Products links.
  * @var  Registry $params    Component params.
  *
  */
 
-
 $root = Uri::getInstance()->toString(array('scheme', 'host', 'port'));
 $link = $root;
-$link .= ($recipient === 'admin') ? '/administrator/index.php?option=' . $component . '&task=order.edit&id='
+$link .= ($recipient === 'admin') ? '/administrator/index.php?option=com_radicalmart_express&task=order.edit&id='
 	. $order->id : $order->link;
 ?>
 	<h1>
@@ -45,12 +42,12 @@ $link .= ($recipient === 'admin') ? '/administrator/index.php?option=' . $compon
 	</h1>
 	<div style="margin-bottom: 20px;">
 		<div>
-			<strong><?php echo Text::_($constant . '_STATUS'); ?>: </strong>
+			<strong><?php echo Text::_('COM_RADICALMART_EXPRESS_STATUS'); ?>: </strong>
 			<span><?php echo Text::_($order->status->title); ?></span>
 		</div>
 		<?php if (!empty($order->shipping)): ?>
 			<div>
-				<strong><?php echo Text::_($constant . '_SHIPPING'); ?>: </strong>
+				<strong><?php echo Text::_('COM_RADICALMART_EXPRESS_SHIPPING'); ?>: </strong>
 				<span>
 					<?php echo (!empty($order->shipping->order->title)) ?
 						$order->shipping->order->title : $order->shipping->title; ?>
@@ -59,7 +56,7 @@ $link .= ($recipient === 'admin') ? '/administrator/index.php?option=' . $compon
 		<?php endif; ?>
 		<?php if (!empty($order->payment)): ?>
 			<div>
-				<strong><?php echo Text::_($constant . '_PAYMENT'); ?>: </strong>
+				<strong><?php echo Text::_('COM_RADICALMART_EXPRESS_PAYMENT'); ?>: </strong>
 				<span>
 					<?php echo (!empty($order->payment->order->title)) ?
 						$order->payment->order->title : $order->payment->title; ?>
@@ -71,9 +68,9 @@ $link .= ($recipient === 'admin') ? '/administrator/index.php?option=' . $compon
 				if (empty(trim($value))) continue;
 
 				if ($label = $params->get('fields_' . $key . '_label')) $label = Text::_($label);
-				elseif (Factory::getLanguage()->hasKey($constant . '_' . $key))
+				elseif (Factory::getLanguage()->hasKey('COM_RADICALMART_EXPRESS_' . $key))
 				{
-					$label = Text::_($constant . '_' . $key);
+					$label = Text::_('COM_RADICALMART_EXPRESS_' . $key);
 				}
 				else $label = $key;
 				?>
@@ -88,16 +85,16 @@ $link .= ($recipient === 'admin') ? '/administrator/index.php?option=' . $compon
 		<thead>
 		<tr>
 			<th style="text-align: left; vertical-align: bottom; font-weight: bold;padding: 8px;line-height: 18px; border-left:1px solid #ddd; ">
-				<?php echo Text::_($constant . '_PRODUCT'); ?>
+				<?php echo Text::_('COM_RADICALMART_EXPRESS_PRODUCT'); ?>
 			</th>
 			<th style="vertical-align: bottom; font-weight: bold;padding: 8px;line-height: 18px; border-left:1px solid #ddd; text-align: right;">
-				<?php echo Text::_($constant . '_PRICE'); ?>
+				<?php echo Text::_('COM_RADICALMART_EXPRESS_PRICE'); ?>
 			</th>
 			<th style="vertical-align: bottom; font-weight: bold;padding: 8px;line-height: 18px; border-left:1px solid #ddd; text-align: center;">
-				<?php echo Text::_($constant . '_QUANTITY'); ?>
+				<?php echo Text::_('COM_RADICALMART_EXPRESS_QUANTITY'); ?>
 			</th>
 			<th style=" vertical-align: bottom; font-weight: bold;padding: 8px;line-height: 18px; border-left:1px solid #ddd; text-align: right;">
-				<?php echo Text::_($constant . '_SUM'); ?>
+				<?php echo Text::_('COM_RADICALMART_EXPRESS_SUM'); ?>
 			</th>
 		</tr>
 		</thead>
@@ -147,55 +144,20 @@ $link .= ($recipient === 'admin') ? '/administrator/index.php?option=' . $compon
 				</td>
 			</tr>
 		<?php endforeach; ?>
-		<?php if (!empty($order->shipping) && !empty($order->shipping->order) && !empty($order->shipping->order->price)):
-			$style = 'padding: 8px; line-height: 18px; text-align: left; vertical-align: top;border-top: 1px solid #ddd;';
-			if ($i % 2) $style .= 'background-color: #f9f9f9;';
-			$i++;
-			?>
-			<tr>
-				<td style="<?php echo $style; ?>">
-					<?php echo (!empty($order->shipping->order->title)) ?
-						$order->shipping->order->title : $order->shipping->title; ?>
-				</td>
-				<td style="<?php echo $style; ?> text-align: right;border-left: 1px solid #ddd;">
-					<?php if (!empty($order->shipping->order->price['discount_enable'])): ?>
-						<div style="font-size: 12px; color: #ccc">
-							<s><?php echo $order->shipping->order->price['base_seo']; ?></s>
-							<?php echo ' ( - ' . $order->shipping->order->price['discount_seo'] . ')'; ?>
-						</div>
-					<?php endif; ?>
-					<div>
-						<?php echo str_replace(' ', '&nbsp;', $order->shipping->order->price['final_seo']); ?>
-					</div>
-				</td>
-				<td style="<?php echo $style; ?> text-align: center;border-left: 1px solid #ddd;">1</td>
-				<td style="<?php echo $style; ?> text-align: right;border-left: 1px solid #ddd;">
-					<?php if (!empty($order->shipping->order->price['discount_enable'])): ?>
-						<div style="font-size: 12px; color: #ccc">
-							<s><?php echo $order->shipping->order->price['base_seo']; ?></s>
-							<?php echo ' ( - ' . $order->shipping->order->price['discount_seo'] . ')'; ?>
-						</div>
-					<?php endif; ?>
-					<div>
-						<?php echo str_replace(' ', '&nbsp;', $order->shipping->order->price['final_seo']); ?>
-					</div>
-				</td>
-			</tr>
-		<?php endif; ?>
 		</tbody>
 		<tfoot>
 		<tr>
 			<td colspan="3" style="border-top: 1px solid #ddd;"></td>
 			<td style="border-top: 1px solid #ddd; text-align: right;">
 				<div style="margin-bottom: 5px;">
-					<span><?php echo Text::_($constant . '_SUBTOTAL'); ?>: </span>
+					<span><?php echo Text::_('COM_RADICALMART_EXPRESS_SUBTOTAL'); ?>: </span>
 					<span>
 						<?php echo str_replace(' ', '&nbsp;', $order->total['base_seo']); ?>
 					</span>
 				</div>
 				<?php if (!empty($order->total['discount'])): ?>
 					<div style="margin-bottom: 5px;">
-						<span><?php echo Text::_($constant . '_PRICE_DISCOUNT'); ?>: </span>
+						<span><?php echo Text::_('COM_RADICALMART_EXPRESS_PRICE_DISCOUNT'); ?>: </span>
 						<span>
 							<?php echo str_replace(' ', '&nbsp;', $order->total['discount_seo']); ?>
 						</span>
@@ -203,14 +165,14 @@ $link .= ($recipient === 'admin') ? '/administrator/index.php?option=' . $compon
 				<?php endif; ?>
 				<?php if ($order->payment && !empty($order->payment->order->price['fee_string'])): ?>
 					<div style="margin-bottom: 5px;">
-						<span><?php echo Text::_($constant . '_PRICE_FEE'); ?>: </span>
+						<span><?php echo Text::_('COM_RADICALMART_EXPRESS_PRICE_FEE'); ?>: </span>
 						<span>
 							<?php echo str_replace(' ', '&nbsp;', $order->total['fee_seo']); ?>
 						</span>
 					</div>
 				<?php endif; ?>
 				<div style="font-size: 18px; padding: 20px">
-					<span><?php echo Text::_($constant . '_TOTAL'); ?>: </span>
+					<span><?php echo Text::_('COM_RADICALMART_EXPRESS_TOTAL'); ?>: </span>
 					<strong>
 						<?php echo str_replace(' ', '&nbsp;', $order->total['final_seo']); ?>
 					</strong>
@@ -222,7 +184,7 @@ $link .= ($recipient === 'admin') ? '/administrator/index.php?option=' . $compon
 <?php if ($order->pay && $recipient == 'client'): ?>
 	<div style="text-align: center;margin-top:20px;">
 		<a href="<?php echo $order->pay; ?>" style="color: #006838;font-size: 22px;">
-			<?php echo Text::_($constant . '_PAY'); ?>
+			<?php echo Text::_('COM_RADICALMART_EXPRESS_PAY'); ?>
 		</a>
 	</div>
 <?php endif; ?>

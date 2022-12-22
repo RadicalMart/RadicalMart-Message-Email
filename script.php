@@ -23,6 +23,29 @@ use Joomla\CMS\Log\Log;
 class PlgRadicalMart_MessageEmailInstallerScript
 {
 	/**
+	 * Runs right before any installation action.
+	 *
+	 * @param   string            $type    Type of PostFlight action.
+	 * @param   InstallerAdapter  $parent  Parent object calling object.
+	 *
+	 * @throws  Exception
+	 *
+	 * @return  boolean True on success, False on failure.
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	function preflight($type, $parent)
+	{
+		// Change update servers
+		if ($type === 'update')
+		{
+			$this->changeUpdateServer();
+		}
+
+		return true;
+	}
+
+	/**
 	 * Runs right after any installation action.
 	 *
 	 * @param   string            $type    Type of PostFlight action. Possible values are:
@@ -41,6 +64,22 @@ class PlgRadicalMart_MessageEmailInstallerScript
 
 		// Parse layouts
 		$this->parseLayouts($parent->getParent()->getManifest()->layouts, $parent->getParent());
+
+		// Remove old layouts
+		if ($type == 'update')
+		{
+			$folder = Path::clean(JPATH_ROOT . '/components/radicalmart/message/email');
+			if (Folder::exists($folder))
+			{
+				Folder::delete($folder);
+			}
+
+			$folder = Path::clean(JPATH_ROOT . '/components/radicalmart/message');
+			if (Folder::exists($folder) && empty(Folder::folders($folder)))
+			{
+				Folder::delete($folder);
+			}
+		}
 
 		return true;
 	}
@@ -167,5 +206,28 @@ class PlgRadicalMart_MessageEmailInstallerScript
 		if (!empty($folder)) Folder::delete($source);
 
 		return true;
+	}
+
+	/**
+	 * Method to change update server.
+	 *
+	 * @since 1.1.1
+	 */
+	protected function changeUpdateServer()
+	{
+		$old = 'https://radicalmart.ru/update?element=plg_radicalmart_message_email';
+		$new = 'https://sovmart.ru/update?element=plg_radicalmart_message_email';
+
+		$db    = Factory::getDbo();
+		$query = $db->getQuery(true)
+			->select(['update_site_id', 'location'])
+			->from($db->quoteName('#__update_sites'))
+			->where($db->quoteName('location') . ' LIKE ' .
+				$db->quote($old));
+		if ($update = $db->setQuery($query)->loadObject())
+		{
+			$update->location = $new;
+			$db->updateObject('#__update_sites', $update, 'update_site_id');
+		}
 	}
 }
