@@ -20,8 +20,7 @@ extract($displayData);
  * Layout variables
  * -----------------
  *
- * @var  array  $user     New user data.
- * @var  string $constant Language constant.
+ * @var  array $user New user data.
  *
  */
 

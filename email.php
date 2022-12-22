@@ -68,7 +68,7 @@ class plgRadicalMart_MessageEmail extends CMSPlugin
 	public function onRadicalMartExpressPrepareConfigForm($form, $data)
 	{
 		Form::addFormPath(__DIR__ . '/forms');
-		$form->loadFile('express');
+		$form->loadFile('radicalmart_express');
 	}
 
 	/**
@@ -83,34 +83,105 @@ class plgRadicalMart_MessageEmail extends CMSPlugin
 	 */
 	public function onRadicalMartSendMessage($type = null, $data = null)
 	{
-		if (!in_array($type, array('user.create', 'order.create', 'order.change_status',
-			'express.user.create', 'express.order.create', 'express.order.change_status'))) return;
-
-		$constant  = 'COM_RADICALMART';
-		$component = 'com_radicalmart';
-		if (in_array($type, array('express.user.create', 'express.order.create', 'express.order.change_status')))
+		if (!in_array($type, ['radicalmart.user.create', 'radicalmart.order.create', 'radicalmart.order.change_status']))
 		{
-			$constant  .= '_EXPRESS';
-			$component .= '_express';
-			$helper = 'RadicalMartHelperMessage';
+			return;
 		}
-		else {
-			$helper = '\\Joomla\\Component\\RadicalMart\\Administrator\\Helper\\MessageHelper';
-		}
-		$params = ComponentHelper::getParams($component);
 
-		if ($type === 'order.create' || $type === 'order.change_status'
-			|| $type === 'express.order.create' || $type === 'express.order.change_status')
+		$helper = '\\Joomla\\Component\\RadicalMart\\Administrator\\Helper\\MessageHelper';
+		$params = \Joomla\Component\RadicalMart\Administrator\Helper\ParamsHelper::getComponentParams();
+		$layout = 'plugins.radicalmart_message.email.' . $type;
+
+		if (in_array($type, ['radicalmart.order.create', 'radicalmart.order.change_status']))
 		{
+			// Send order message
 			$config  = Factory::getConfig();
-			$layout  = ($type === 'order.create' || $type === 'express.order.create')
-				? 'create' : 'status';
-			$subject = ($type === 'order.create' || $type === 'express.order.create')
+			$subject = ($type === 'radicalmart.order.create')
+				? Text::sprintf('PLG_RADICALMART_MESSAGE_EMAIL_ORDER_CREATE', $data->number)
+				: Text::sprintf('PLG_RADICALMART_MESSAGE_EMAIL_ORDER_CHANGE_STATUS', $data->number, Text::_($data->status->title));
+
+			// Send client email
+			if (!empty($data->contacts['email']))
+			{
+				$this->sendEmail($subject, $data->contacts['email'],
+					$helper::renderLayout($layout, [
+						'recipient' => 'client',
+						'order'     => $data,
+						'params'    => $params,
+					]));
+			}
+
+			// Send admin email
+			$adminEmails = [];
+			if (!empty($params->get('messages_email_admin')))
+			{
+				foreach ((array) $params->get('messages_email_admin') as $param)
+				{
+					if (!empty($param->email))
+					{
+						$adminEmails[] = $param->email;
+					}
+				}
+			}
+
+			if (empty($adminEmails))
+			{
+				$adminEmails[] = $config->get('replyto', $config->get('mailfrom'));
+			}
+
+			$this->sendEmail($subject, $adminEmails,
+				$helper::renderLayout($layout, [
+					'recipient' => 'admin',
+					'order'     => $data,
+					'params'    => $params,
+				]));
+		}
+		elseif (($type === 'radicalmart.user.create') && !empty($data['result']))
+		{
+			// Send user email
+			$subject = Text::sprintf('PLG_RADICALMART_MESSAGE_EMAIL_USER_CREATE', $data['user']->name,
+				Uri::getInstance()->getHost());
+
+			$recipient = $data['user']->email;
+			$body      = $helper::renderLayout($layout, ['user' => $data]);
+
+			// Send email
+			$this->sendEmail($subject, $recipient, $body);
+		}
+	}
+
+	/**
+	 * Method to send message.
+	 *
+	 * @param   string  $type  Message type.
+	 * @param   mixed   $data  Message data.
+	 *
+	 * @throws Exception
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	public function onRadicalMartExpressSendMessage($type = null, $data = null)
+	{
+		if (!in_array($type, ['radicalmart_express.user.create', 'radicalmart_express.order.create',
+			'radicalmart_express.order.change_status']))
+		{
+			return;
+		}
+
+		$helper = 'RadicalMartHelperMessage';
+		$params = ComponentHelper::getParams('com_radicalmart_express');
+		$layout = 'plugins.radicalmart_message.email.' . $type;
+
+		if (in_array($type, ['radicalmart_express.order.create', 'radicalmart_express.order.change_status']))
+		{
+			// Send order message
+			$config  = Factory::getConfig();
+			$subject = ($type === 'radicalmart_express.order.create')
 				? Text::sprintf('PLG_RADICALMART_MESSAGE_EMAIL_ORDER_CREATE', $data->number)
 				: Text::sprintf('PLG_RADICALMART_MESSAGE_EMAIL_ORDER_CHANGE_STATUS', $data->number, Text::_($data->status->title));
 
 			$links = true;
-			if (($type === 'express.order.create' || $type === 'express.order.change_status') && $data->status->id !== 2)
+			if ($data->status->id !== 2)
 			{
 				$links = false;
 			}
@@ -119,45 +190,48 @@ class plgRadicalMart_MessageEmail extends CMSPlugin
 			if (!empty($data->contacts['email']))
 			{
 				$this->sendEmail($subject, $data->contacts['email'],
-					$helper::renderLayout('email.order.' . $layout, array(
+					$helper::renderLayout($layout, [
 						'recipient' => 'client',
 						'order'     => $data,
-						'constant'  => $constant,
-						'component' => $component,
 						'params'    => $params,
-						'links'     => $links
-					)));
+						'links'     => $links,
+					]));
 			}
 
 			// Send admin email
-			$adminEmails = array();
+			$adminEmails = [];
 			if (!empty($params->get('messages_email_admin')))
 			{
 				foreach ((array) $params->get('messages_email_admin') as $param)
 				{
-					if (!empty($param->email)) $adminEmails[] = $param->email;
+					if (!empty($param->email))
+					{
+						$adminEmails[] = $param->email;
+					}
 				}
 			}
-			if (empty($adminEmails)) $adminEmails[] = $config->get('replyto', $config->get('mailfrom'));
+
+			if (empty($adminEmails))
+			{
+				$adminEmails[] = $config->get('replyto', $config->get('mailfrom'));
+			}
 
 			$this->sendEmail($subject, $adminEmails,
-				$helper::renderLayout('email.order.' . $layout, array(
+				$helper::renderLayout($layout, [
 					'recipient' => 'admin',
 					'order'     => $data,
-					'constant'  => $constant,
-					'component' => $component,
 					'params'    => $params,
-					'links'     => $links
-				)));
+					'links'     => true,
+				]));
 		}
-		elseif (($type === 'user.create' || $type === 'express.user.create') && !empty($data['result']))
+		elseif (($type === 'radicalmart_express.user.create') && !empty($data['result']))
 		{
-			// Prepare data
-			$subject   = Text::sprintf('PLG_RADICALMART_MESSAGE_EMAIL_USER_CREATE', $data['user']->name,
+			// Send user email
+			$subject = Text::sprintf('PLG_RADICALMART_MESSAGE_EMAIL_USER_CREATE', $data['user']->name,
 				Uri::getInstance()->getHost());
+
 			$recipient = $data['user']->email;
-			$body      = $helper::renderLayout('email.user.create',
-				array('user' => $data, 'constant' => $constant));
+			$body      = $helper::renderLayout($layout, ['user' => $data]);
 
 			// Send email
 			$this->sendEmail($subject, $recipient, $body);

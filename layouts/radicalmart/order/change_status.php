@@ -34,7 +34,7 @@ extract($displayData);
 
 $root = Uri::getInstance()->toString(array('scheme', 'host', 'port'));
 $link = $root;
-$link .= ($recipient === 'admin') ? '/administrator/index.php?option=' . $component . '&task=order.edit&id='
+$link .= ($recipient === 'admin') ? '/administrator/index.php?option=com_radicalmart&task=order.edit&id='
 	. $order->id : $order->link;
 ?>
 	<h1>
@@ -44,12 +44,12 @@ $link .= ($recipient === 'admin') ? '/administrator/index.php?option=' . $compon
 	</h1>
 	<div style="margin-bottom: 20px;">
 		<div>
-			<strong><?php echo Text::_($constant . '_STATUS'); ?>: </strong>
+			<strong><?php echo Text::_('COM_RADICALMART_STATUS'); ?>: </strong>
 			<span><?php echo Text::_($order->status->title); ?></span>
 		</div>
 		<?php if (!empty($order->shipping)): ?>
 			<div>
-				<strong><?php echo Text::_($constant . '_SHIPPING'); ?>: </strong>
+				<strong><?php echo Text::_('COM_RADICALMART_SHIPPING'); ?>: </strong>
 				<span>
 					<?php echo (!empty($order->shipping->order->title)) ?
 						$order->shipping->order->title : $order->shipping->title; ?>
@@ -58,7 +58,7 @@ $link .= ($recipient === 'admin') ? '/administrator/index.php?option=' . $compon
 		<?php endif; ?>
 		<?php if (!empty($order->payment)): ?>
 			<div>
-				<strong><?php echo Text::_($constant . '_PAYMENT'); ?>: </strong>
+				<strong><?php echo Text::_('COM_RADICALMART_PAYMENT'); ?>: </strong>
 				<span>
 					<?php echo (!empty($order->payment->order->title)) ?
 						$order->payment->order->title : $order->payment->title; ?>
@@ -70,9 +70,9 @@ $link .= ($recipient === 'admin') ? '/administrator/index.php?option=' . $compon
 				if (empty(trim($value))) continue;
 
 				if ($label = $params->get('fields_' . $key . '_label')) $label = Text::_($label);
-				elseif (Factory::getLanguage()->hasKey($constant . '_' . $key))
+				elseif (Factory::getLanguage()->hasKey('COM_RADICALMART_' . $key))
 				{
-					$label = Text::_($constant . '_' . $key);
+					$label = Text::_('COM_RADICALMART_' . $key);
 				}
 				else $label = $key;
 				?>
@@ -87,16 +87,16 @@ $link .= ($recipient === 'admin') ? '/administrator/index.php?option=' . $compon
 		<thead>
 		<tr>
 			<th style="text-align: left; vertical-align: bottom; font-weight: bold;padding: 8px;line-height: 18px; border-left:1px solid #ddd; ">
-				<?php echo Text::_($constant . '_PRODUCT'); ?>
+				<?php echo Text::_('COM_RADICALMART_PRODUCT'); ?>
 			</th>
 			<th style="vertical-align: bottom; font-weight: bold;padding: 8px;line-height: 18px; border-left:1px solid #ddd; text-align: right;">
-				<?php echo Text::_($constant . '_PRICE'); ?>
+				<?php echo Text::_('COM_RADICALMART_PRICE'); ?>
 			</th>
 			<th style="vertical-align: bottom; font-weight: bold;padding: 8px;line-height: 18px; border-left:1px solid #ddd; text-align: center;">
-				<?php echo Text::_($constant . '_QUANTITY'); ?>
+				<?php echo Text::_('COM_RADICALMART_QUANTITY'); ?>
 			</th>
 			<th style=" vertical-align: bottom; font-weight: bold;padding: 8px;line-height: 18px; border-left:1px solid #ddd; text-align: right;">
-				<?php echo Text::_($constant . '_SUM'); ?>
+				<?php echo Text::_('COM_RADICALMART_SUM'); ?>
 			</th>
 		</tr>
 		</thead>
@@ -105,12 +105,15 @@ $link .= ($recipient === 'admin') ? '/administrator/index.php?option=' . $compon
 		$i = 0;
 		foreach ($order->products as $p => $product) :
 			$style = 'padding: 8px; line-height: 18px; text-align: left; vertical-align: top;border-top: 1px solid #ddd;';
-			if ($i % 2) $style .= 'background-color: #f9f9f9;';
+			if ($i % 2)
+			{
+				$style .= 'background-color: #f9f9f9;';
+			}
 			$i++;
 			?>
 			<tr>
 				<td style="<?php echo $style; ?>">
-					<?php if ($product->link && $links) : ?>
+					<?php if ($product->link) : ?>
 						<a href="<?php echo $root . $product->link; ?>" style="word-wrap:break-word;"
 						   class="uk-link-reset"><?php echo $product->title; ?></a>
 					<?php else: ?>
@@ -187,14 +190,14 @@ $link .= ($recipient === 'admin') ? '/administrator/index.php?option=' . $compon
 			<td colspan="3" style="border-top: 1px solid #ddd;"></td>
 			<td style="border-top: 1px solid #ddd; text-align: right;">
 				<div style="margin-bottom: 5px;">
-					<span><?php echo Text::_($constant . '_SUBTOTAL'); ?>: </span>
+					<span><?php echo Text::_('COM_RADICALMART_SUBTOTAL'); ?>: </span>
 					<span>
 						<?php echo str_replace(' ', '&nbsp;', $order->total['base_seo']); ?>
 					</span>
 				</div>
 				<?php if (!empty($order->total['discount'])): ?>
 					<div style="margin-bottom: 5px;">
-						<span><?php echo Text::_($constant . '_PRICE_DISCOUNT'); ?>: </span>
+						<span><?php echo Text::_('COM_RADICALMART_PRICE_DISCOUNT'); ?>: </span>
 						<span>
 							<?php echo str_replace(' ', '&nbsp;', $order->total['discount_seo']); ?>
 						</span>
@@ -202,14 +205,14 @@ $link .= ($recipient === 'admin') ? '/administrator/index.php?option=' . $compon
 				<?php endif; ?>
 				<?php if ($order->payment && !empty($order->payment->order->price['fee_string'])): ?>
 					<div style="margin-bottom: 5px;">
-						<span><?php echo Text::_($constant . '_PRICE_FEE'); ?>: </span>
+						<span><?php echo Text::_('COM_RADICALMART_PRICE_FEE'); ?>: </span>
 						<span>
 							<?php echo str_replace(' ', '&nbsp;', $order->total['fee_seo']); ?>
 						</span>
 					</div>
 				<?php endif; ?>
 				<div style="font-size: 18px; padding: 20px">
-					<span><?php echo Text::_($constant . '_TOTAL'); ?>: </span>
+					<span><?php echo Text::_('COM_RADICALMART_TOTAL'); ?>: </span>
 					<strong>
 						<?php echo str_replace(' ', '&nbsp;', $order->total['final_seo']); ?>
 					</strong>
@@ -221,7 +224,7 @@ $link .= ($recipient === 'admin') ? '/administrator/index.php?option=' . $compon
 <?php if ($order->pay && $recipient == 'client'): ?>
 	<div style="text-align: center;margin-top:20px;">
 		<a href="<?php echo $order->pay; ?>" style="color: #006838;font-size: 22px;">
-			<?php echo Text::_($constant . '_PAY'); ?>
+			<?php echo Text::_('COM_RADICALMART_PAY'); ?>
 		</a>
 	</div>
 <?php endif; ?>
