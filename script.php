@@ -81,7 +81,6 @@ class PlgRadicalMart_MessageEmailInstallerScript
 			}
 		}
 
-
 		return true;
 	}
 
