@@ -25,7 +25,7 @@ class PlgRadicalMart_MessageEmailInstallerScript
 	/**
 	 * Runs right before any installation action.
 	 *
-	 * @param   string                           $type    Type of PostFlight action.
+	 * @param   string            $type    Type of PostFlight action.
 	 * @param   InstallerAdapter  $parent  Parent object calling object.
 	 *
 	 * @throws  Exception
@@ -64,6 +64,23 @@ class PlgRadicalMart_MessageEmailInstallerScript
 
 		// Parse layouts
 		$this->parseLayouts($parent->getParent()->getManifest()->layouts, $parent->getParent());
+
+		// Remove old layouts
+		if ($type == 'update')
+		{
+			$folder = Path::clean(JPATH_ROOT . '/components/radicalmart/message/email');
+			if (Folder::exists($folder))
+			{
+				Folder::delete($folder);
+			}
+
+			$folder = Path::clean(JPATH_ROOT . '/components/radicalmart/message');
+			if (Folder::exists($folder) && empty(Folder::folders($folder)))
+			{
+				Folder::delete($folder);
+			}
+		}
+
 
 		return true;
 	}
