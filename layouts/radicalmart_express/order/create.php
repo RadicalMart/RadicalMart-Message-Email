@@ -4,14 +4,13 @@
  * @subpackage  plg_radicalmart_message_email
  * @version     __DEPLOY_VERSION__
  * @author      Delo Design - delo-design.ru
- * @copyright   Copyright (c) 2021 Delo Design. All rights reserved.
+ * @copyright   Copyright (c) 2023 Delo Design. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
  * @link        https://delo-design.ru/
  */
 
 defined('_JEXEC') or die;
 
-use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
@@ -30,7 +29,6 @@ extract($displayData);
  *
  */
 
-
 $root = Uri::getInstance()->toString(array('scheme', 'host', 'port'));
 $link = $root;
 $link .= ($recipient === 'admin') ? '/administrator/index.php?option=com_radicalmart_express&task=order.edit&id='
@@ -46,6 +44,32 @@ $link .= ($recipient === 'admin') ? '/administrator/index.php?option=com_radical
 			<strong><?php echo Text::_('COM_RADICALMART_EXPRESS_STATUS'); ?>: </strong>
 			<span><?php echo Text::_($order->status->title); ?></span>
 		</div>
+		<?php if (!empty($order->shipping)): ?>
+			<div>
+				<strong><?php echo Text::_('COM_RADICALMART_EXPRESS_SHIPPING'); ?>: </strong>
+				<span>
+					<?php echo (!empty($order->shipping->order->title)) ?
+						$order->shipping->order->title : $order->shipping->title; ?>
+				</span>
+			</div>
+			<?php if (!empty($order->shipping->notification)): ?>
+				<?php foreach ($order->shipping->notification as $title => $text):
+					if (empty($text))
+					{
+						continue;
+					}
+					?>
+					<div>
+						<?php if (!is_numeric($title)): ?>
+							<strong><?php echo Text::_($title); ?>: </strong>
+						<?php endif; ?>
+						<span>
+							<?php echo nl2br($text); ?>
+						</span>
+					</div>
+				<?php endforeach; ?>
+			<?php endif; ?>
+		<?php endif; ?>
 		<?php if (!empty($order->payment)): ?>
 			<div>
 				<strong><?php echo Text::_('COM_RADICALMART_EXPRESS_PAYMENT'); ?>: </strong>
@@ -54,6 +78,23 @@ $link .= ($recipient === 'admin') ? '/administrator/index.php?option=com_radical
 						$order->payment->order->title : $order->payment->title; ?>
 				</span>
 			</div>
+			<?php if (!empty($order->payment->notification)): ?>
+				<?php foreach ($order->payment->notification as $title => $text):
+					if (empty($text))
+					{
+						continue;
+					}
+					?>
+					<div>
+						<?php if (!is_numeric($title)): ?>
+							<strong><?php echo Text::_($title); ?>: </strong>
+						<?php endif; ?>
+						<span>
+							<?php echo nl2br($text); ?>
+						</span>
+					</div>
+				<?php endforeach; ?>
+			<?php endif; ?>
 		<?php endif; ?>
 		<?php if (!empty($order->contacts)): ?>
 			<?php foreach ($order->contacts as $key => $value):

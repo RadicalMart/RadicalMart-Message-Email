@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="3.9" type="plugin" group="radicalmart_message" method="upgrade">
+<extension version="4.2" type="plugin" group="radicalmart_message" method="upgrade">
 	<name>PLG_RADICALMART_MESSAGE_EMAIL</name>
 	<author>Delo Design</author>
-	<creationDate>December 2022</creationDate>
-	<copyright>Copyright © 2021 Delo Design. All rights reserved.</copyright>
+	<creationDate>April 2023</creationDate>
+	<copyright>Copyright © 2023 Delo Design. All rights reserved.</copyright>
 	<license>https://www.gnu.org/copyleft/gpl.html GNU/GPL</license>
 	<authorEmail>boss@delo-design.ru</authorEmail>
 	<authorUrl>https://delo-design.ru</authorUrl>
 	<version>1.2.1-dev</version>
 	<description>PLG_RADICALMART_MESSAGE_EMAIL_DESCRIPTION</description>
 	<scriptfile>script.php</scriptfile>
+	<namespace path="src">Joomla\Plugin\RadicalMartMessage\Email</namespace>
 	<languages folder="language">
 		<language tag="en-GB">en-GB/en-GB.plg_radicalmart_message_email.ini</language>
 		<language tag="en-GB">en-GB/en-GB.plg_radicalmart_message_email.sys.ini</language>
@@ -17,8 +18,9 @@
 		<language tag="ru-RU">ru-RU/ru-RU.plg_radicalmart_message_email.sys.ini</language>
 	</languages>
 	<files>
-		<filename plugin="email">email.php</filename>
 		<folder>forms</folder>
+		<folder>services</folder>
+		<folder plugin="email">src</folder>
 	</files>
 	<layouts destination="plugins/radicalmart_message/email" folder="layouts">
 		<folder>radicalmart</folder>

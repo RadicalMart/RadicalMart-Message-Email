@@ -1,12 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<form>
-	<fieldset name="messages_email" label="PLG_RADICALMART_MESSAGE_EMAIL"
-			  description="PLG_RADICALMART_MESSAGE_EMAIL_DESCRIPTION">
+<form addfieldprefix="Joomla\Component\RadicalMart\Administrator\Field">
+	<fieldset name="messages_email" label="PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_FIELDSET">
+		<field name="messages_email_customer" type="events"
+			   label="PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_CUSTOMER"
+			   hint="PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_CUSTOMER_HINT"
+			   multiple="true"
+			   extension="com_radicalmart"
+			   addfieldprefix="Joomla\Plugin\RadicalMartMessage\Email\Field"
+			   layout="joomla.form.field.list-fancy-select"
+			   parentclass="stack"
+			   labelclass="mb-1"
+			   default="0">
+			<option value="0">PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_EVENTS_ALL</option>
+			<option value="-1">PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_EVENTS_NONE</option>
+			<option value="radicalmart.user.create">
+				PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_EVENTS_USER_CREATE
+			</option>
+			<option value="radicalmart.order.create">
+				PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_EVENTS_ORDER_CREATE
+			</option>
+		</field>
 		<field name="messages_email_admin" type="subform"
 			   label="PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_ADMIN"
-			   multiple="true">
+			   description="PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_ADMIN_DESCRIPTION"
+			   multiple="true"
+			   parentclass="stack"
+			   labelclass="mb-1">
 			<form>
-				<field name="email" type="email" label="COM_RADICALMART_EMAIL" required="true"/>
+				<field name="email" type="email"
+					   label="COM_RADICALMART_EMAIL"
+					   required="true"/>
+				<field name="events" type="events"
+					   label="PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_EVENTS"
+					   hint="PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_EVENTS_HINT"
+					   multiple="true"
+					   extension="com_radicalmart"
+					   addfieldprefix="Joomla\Plugin\RadicalMartMessage\Email\Field"
+					   layout="joomla.form.field.list-fancy-select"
+					   default="0">
+					<option value="0">PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_EVENTS_ALL</option>
+					<option value="radicalmart.order.create">
+						PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_EVENTS_ORDER_CREATE
+					</option>
+				</field>
 			</form>
 		</field>
 	</fieldset>
