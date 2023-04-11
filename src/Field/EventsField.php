@@ -81,11 +81,22 @@ class EventsField extends ListField
 		{
 			$this->setRadicalMartStatuses($options);
 		}
+		elseif ($this->extension === 'com_radicalmart_express')
+		{
+			$this->setRadicalMartExpressStatuses($options);
+		}
 
 		return $options;
 	}
 
-	protected function setRadicalMartStatuses(&$options)
+	/**
+	 * Method to add RadicalMart order statuses to options.
+	 *
+	 * @param   array  $options  Current options array.
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected function setRadicalMartStatuses(array &$options)
 	{
 		$db    = $this->getDatabase();
 		$query = $db->getQuery(true)
@@ -96,12 +107,40 @@ class EventsField extends ListField
 			foreach ($statuses as $status)
 			{
 				$option        = new \stdClass();
-				$option->value = 'radicalmart.order.change_' . $status->id;
+				$option->value = 'radicalmart.order.change_status.' . $status->id;
 				$option->text  = Text::sprintf('PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_EVENTS_ORDER_CHANGE_STATUS',
 					Text::_($status->title));
 
 				$options[] = $option;
 			}
 		}
+	}
+
+	/**
+	 * Method to add RadicalMart Express order statuses to options.
+	 *
+	 * @param   array  $options  Current options array.
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected function setRadicalMartExpressStatuses(array &$options)
+	{
+		$new        = new \stdClass();
+		$new->value = 'radicalmart_express.order.change_status.1';
+		$new->text  = Text::sprintf('PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_EVENTS_ORDER_CHANGE_STATUS',
+			Text::_('COM_RADICALMART_EXPRESS_STATUS_NEW'));
+		$options[]  = $new;
+
+		$paid        = new \stdClass();
+		$paid->value = 'radicalmart_express.order.change_status.2';
+		$paid->text  = Text::sprintf('PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_EVENTS_ORDER_CHANGE_STATUS',
+			Text::_('COM_RADICALMART_EXPRESS_STATUS_PAID'));
+		$options[]   = $paid;
+
+		$cancel        = new \stdClass();
+		$cancel->value = 'radicalmart_express.order.change_status.3';
+		$cancel->text  = Text::sprintf('PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_EVENTS_ORDER_CHANGE_STATUS',
+			Text::_('COM_RADICALMART_EXPRESS_STATUS_CANCELED'));
+		$options[]     = $cancel;
 	}
 }

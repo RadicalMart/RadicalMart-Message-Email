@@ -24,18 +24,27 @@ extract($displayData);
  *
  * @var  object   $order     The order id.
  * @var  string   $recipient Mail recipient.
- * @var  string   $constant  Language constant.
- * @var  string   $component Component name constant.
- * @var  boolean  $links     Products links.
  * @var  Registry $params    Component params.
  *
  */
 
-$root = Uri::getInstance()->toString(array('scheme', 'host', 'port'));
+// Prepare link
+$root = Uri::getInstance()->toString(['scheme', 'host', 'port']);
 $link = $root;
-$link .= ($recipient === 'admin') ? '/administrator/index.php?option=com_radicalmart&task=order.edit&id='
-	. $order->id : $order->link;
+if ($recipient === 'admin')
+{
+	$link .= '/administrator/index.php?option=com_radicalmart&task=order.edit&id=' . $order->id;
+}
+elseif (!empty($order->secret_link))
+{
+	$link .= $order->secret_link;
+}
+else
+{
+	$link .= $order->link;
+}
 ?>
+<div>
 	<h1>
 		<a href="<?php echo $link; ?>">
 			<?php echo Text::sprintf('PLG_RADICALMART_MESSAGE_EMAIL_ORDER_INFORMATION', $order->number); ?>
@@ -100,14 +109,22 @@ $link .= ($recipient === 'admin') ? '/administrator/index.php?option=com_radical
 		<?php endif; ?>
 		<?php if (!empty($order->contacts)): ?>
 			<?php foreach ($order->contacts as $key => $value):
-				if (empty(trim($value))) continue;
-
-				if ($label = $params->get('fields_' . $key . '_label')) $label = Text::_($label);
-				elseif (Factory::getLanguage()->hasKey('COM_RADICALMART_' . $key))
+				if (empty(trim($value)))
+				{
+					continue;
+				}
+				if ($label = $params->get('fields_' . $key . '_label'))
+				{
+					$label = Text::_($label);
+				}
+				elseif (Factory::getApplication()->getLanguage()->hasKey('COM_RADICALMART_' . $key))
 				{
 					$label = Text::_('COM_RADICALMART_' . $key);
 				}
-				else $label = $key;
+				else
+				{
+					$label = $key;
+				}
 				?>
 				<div>
 					<strong><?php echo $label ?>: </strong>
@@ -147,8 +164,9 @@ $link .= ($recipient === 'admin') ? '/administrator/index.php?option=com_radical
 			<tr>
 				<td style="<?php echo $style; ?>">
 					<?php if ($product->link) : ?>
-						<a href="<?php echo $root . $product->link; ?>" style="word-wrap:break-word;"
-						   class="uk-link-reset"><?php echo $product->title; ?></a>
+						<a href="<?php echo $root . $product->link; ?>" style="word-wrap:break-word;">
+							<?php echo $product->title; ?>
+						</a>
 					<?php else: ?>
 						<?php echo $product->title; ?>
 					<?php endif; ?>
@@ -171,7 +189,7 @@ $link .= ($recipient === 'admin') ? '/administrator/index.php?option=com_radical
 					<?php if ($product->order['discount_enable']): ?>
 						<div style="font-size: 12px; color: #ccc">
 							<s><?php echo $product->order['sum_base_seo']; ?></s>
-							<?php echo ' ( - ' . $product->order['discount_seo'] . ')'; ?>
+							<?php echo ' ( - ' . $product->order['sum_discount_seo'] . ')'; ?>
 						</div>
 					<?php endif; ?>
 					<div>
@@ -254,10 +272,11 @@ $link .= ($recipient === 'admin') ? '/administrator/index.php?option=com_radical
 		</tr>
 		</tfoot>
 	</table>
-<?php if ($order->pay && $recipient == 'client'): ?>
-	<div style="text-align: center;margin-top:20px;">
-		<a href="<?php echo $order->pay; ?>" style="color: #006838;font-size: 22px;">
-			<?php echo Text::_('COM_RADICALMART_PAY'); ?>
-		</a>
-	</div>
-<?php endif; ?>
+	<?php if ($order->pay && $recipient == 'client'): ?>
+		<div style="text-align: center;margin-top:20px;">
+			<a href="<?php echo $order->pay; ?>" style="color: #006838;font-size: 22px;">
+				<?php echo Text::_('COM_RADICALMART_PAY'); ?>
+			</a>
+		</div>
+	<?php endif; ?>
+</div>
