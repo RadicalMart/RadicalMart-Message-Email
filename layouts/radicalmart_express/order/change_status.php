@@ -163,12 +163,29 @@ else
 			?>
 			<tr>
 				<td style="<?php echo $style; ?>">
-					<?php if ($product->link) : ?>
-						<a href="<?php echo $root . $product->link; ?>" style="word-wrap:break-word;">
+					<div>
+						<?php if ($product->link) : ?>
+							<a href="<?php echo $root . $product->link; ?>" style="word-wrap:break-word;">
+								<?php echo $product->title; ?>
+							</a>
+						<?php else: ?>
 							<?php echo $product->title; ?>
-						</a>
-					<?php else: ?>
-						<?php echo $product->title; ?>
+						<?php endif; ?>
+					</div>
+					<?php if (!empty($product->extra_display)): ?>
+						<div>
+							<?php foreach ($product->extra_display as $extra):
+								if (empty($extra) || (empty($extra['html']) && empty($extra['notification_html'])))
+								{
+									continue;
+								}
+								?>
+								<div>
+									<?php echo (!empty($extra['notification_html'])) ? $extra['notification_html'] :
+										$extra['html']; ?>
+								</div>
+							<?php endforeach; ?>
+						</div>
 					<?php endif; ?>
 				</td>
 				<td style="<?php echo $style; ?> text-align: right;border-left: 1px solid #ddd;">
