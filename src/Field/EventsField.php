@@ -2,7 +2,7 @@
 /*
  * @package     RadicalMart Package
  * @subpackage  plg_radicalmart_message_email
- * @version     __DEPLOY_VERSION__
+ * @version     2.0.0
  * @author      Delo Design - delo-design.ru
  * @copyright   Copyright (c) 2023 Delo Design. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -23,7 +23,7 @@ class EventsField extends ListField
 	 *
 	 * @var  string
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.0.0
 	 */
 	protected $type = 'events';
 
@@ -32,7 +32,7 @@ class EventsField extends ListField
 	 *
 	 * @var  string|null
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.0.0
 	 */
 	protected $extension = null;
 
@@ -94,7 +94,7 @@ class EventsField extends ListField
 	 *
 	 * @param   array  $options  Current options array.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.0.0
 	 */
 	protected function setRadicalMartStatuses(array &$options)
 	{
@@ -121,7 +121,7 @@ class EventsField extends ListField
 	 *
 	 * @param   array  $options  Current options array.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.0.0
 	 */
 	protected function setRadicalMartExpressStatuses(array &$options)
 	{

@@ -2,7 +2,7 @@
 /*
  * @package     RadicalMart Payment Payselection Plugin
  * @subpackage  PLG_RADICALMART_MESSAGE_EMAIL
- * @version     __DEPLOY_VERSION__
+ * @version     2.0.0
  * @author      Delo Design - delo-design.ru
  * @copyright   Copyright (c) 2023 Delo Design. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -35,7 +35,7 @@ return new class () implements ServiceProviderInterface {
 			 *
 			 * @var  AdministratorApplication
 			 *
-			 * @since  __DEPLOY_VERSION__
+			 * @since  2.0.0
 			 */
 			protected AdministratorApplication $app;
 
@@ -44,7 +44,7 @@ return new class () implements ServiceProviderInterface {
 			 *
 			 * @var   DatabaseDriver
 			 *
-			 * @since  __DEPLOY_VERSION__
+			 * @since  2.0.0
 			 */
 			protected DatabaseDriver $db;
 
@@ -53,7 +53,7 @@ return new class () implements ServiceProviderInterface {
 			 *
 			 * @var  string
 			 *
-			 * @since  __DEPLOY_VERSION__
+			 * @since  2.0.0
 			 */
 			protected string $minimumJoomla = '4.2';
 
@@ -62,7 +62,7 @@ return new class () implements ServiceProviderInterface {
 			 *
 			 * @var  string
 			 *
-			 * @since  __DEPLOY_VERSION__
+			 * @since  2.0.0
 			 */
 			protected string $minimumPhp = '7.4';
 
@@ -71,7 +71,7 @@ return new class () implements ServiceProviderInterface {
 			 *
 			 * @var  array
 			 *
-			 * @since  __DEPLOY_VERSION__
+			 * @since  2.0.0
 			 */
 			protected array $updateMethods = [];
 
@@ -80,7 +80,7 @@ return new class () implements ServiceProviderInterface {
 			 *
 			 * @param   AdministratorApplication  $app  The application object.
 			 *
-			 * @since __DEPLOY_VERSION__
+			 * @since 2.0.0
 			 */
 			public function __construct(AdministratorApplication $app)
 			{
@@ -95,7 +95,7 @@ return new class () implements ServiceProviderInterface {
 			 *
 			 * @return  boolean  True on success
 			 *
-			 * @since   __DEPLOY_VERSION__
+			 * @since   2.0.0
 			 */
 			public function install(InstallerAdapter $adapter): bool
 			{
@@ -111,7 +111,7 @@ return new class () implements ServiceProviderInterface {
 			 *
 			 * @return  boolean  True on success
 			 *
-			 * @since   __DEPLOY_VERSION__
+			 * @since   2.0.0
 			 */
 			public function update(InstallerAdapter $adapter): bool
 			{
@@ -125,7 +125,7 @@ return new class () implements ServiceProviderInterface {
 			 *
 			 * @return  boolean  True on success
 			 *
-			 * @since   __DEPLOY_VERSION__
+			 * @since   2.0.0
 			 */
 			public function uninstall(InstallerAdapter $adapter): bool
 			{
@@ -167,7 +167,7 @@ return new class () implements ServiceProviderInterface {
 			 *
 			 * @return  boolean  True on success
 			 *
-			 * @since   __DEPLOY_VERSION__
+			 * @since   2.0.0
 			 */
 			public function postflight(string $type, InstallerAdapter $adapter): bool
 			{
@@ -230,7 +230,7 @@ return new class () implements ServiceProviderInterface {
 			 *
 			 * @return  bool True on success, False on failure.
 			 *
-			 * @since  __DEPLOY_VERSION__
+			 * @since  2.0.0
 			 */
 			protected function checkCompatible(): bool
 			{

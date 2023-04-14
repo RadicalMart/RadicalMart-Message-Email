@@ -2,7 +2,7 @@
 /*
  * @package     RadicalMart Payment Payselection Plugin
  * @subpackage  PLG_RADICALMART_MESSAGE_EMAIL
- * @version     __DEPLOY_VERSION__
+ * @version     2.0.0
  * @author      Delo Design - delo-design.ru
  * @copyright   Copyright (c) 2023 Delo Design. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -51,7 +51,7 @@ class Email extends CMSPlugin implements SubscriberInterface
 	 *
 	 * @var  bool
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.0.0
 	 */
 	public bool $radicalmart = true;
 
@@ -60,7 +60,7 @@ class Email extends CMSPlugin implements SubscriberInterface
 	 *
 	 * @var  bool
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.0.0
 	 */
 	public bool $radicalmart_express = true;
 
@@ -69,7 +69,7 @@ class Email extends CMSPlugin implements SubscriberInterface
 	 *
 	 * @return  array
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0
 	 */
 	public static function getSubscribedEvents(): array
 	{
@@ -119,7 +119,7 @@ class Email extends CMSPlugin implements SubscriberInterface
 	 *
 	 * @throws /Exception
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.0.0
 	 */
 	public function onSendMessage(string $type, $data = null)
 	{
