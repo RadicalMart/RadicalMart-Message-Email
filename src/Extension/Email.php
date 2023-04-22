@@ -149,6 +149,7 @@ class Email extends CMSPlugin implements SubscriberInterface
 			$layoutsHelper = RadicalMartExpressLayoutsHelper::class;
 			$params        = RadicalMartExpressParamsHelper::getComponentParams();
 		}
+		$timeout = (int) $params->get('messages_email_timeout', 15);
 
 		if (!$layoutsHelper)
 		{
@@ -184,15 +185,19 @@ class Email extends CMSPlugin implements SubscriberInterface
 				{
 					try
 					{
-						$this->sendEmail($subject, $data->contacts['email'], $layoutsHelper::renderSiteLayout($layout, [
-							'recipient' => 'client',
-							'order'     => $data,
-							'params'    => $params,
-						]));
+						$this->sendEmail($subject, $data->contacts['email'],
+							$layoutsHelper::renderSiteLayout($layout, [
+								'recipient' => 'client',
+								'order'     => $data,
+								'params'    => $params,
+							]),
+							$timeout
+						);
 					}
 					catch (\Exception $e)
 					{
-						$errors[] = Text::sprintf('PLG_RADICALMART_MESSAGE_EMAIL_ERROR_CUSTOMER_EMAIL', $e->getMessage());
+						$errors[] = Text::sprintf('PLG_RADICALMART_MESSAGE_EMAIL_ERROR_CUSTOMER_EMAIL', $event,
+							$e->getMessage());
 					}
 				}
 			}
@@ -233,15 +238,18 @@ class Email extends CMSPlugin implements SubscriberInterface
 			{
 				try
 				{
-					$this->sendEmail($subject, $recipient, $layoutsHelper::renderSiteLayout($layout, [
-						'recipient' => 'admin',
-						'order'     => $data,
-						'params'    => $params,
-					]));
+					$this->sendEmail($subject, $recipient,
+						$layoutsHelper::renderSiteLayout($layout, [
+							'recipient' => 'admin',
+							'order'     => $data,
+							'params'    => $params,
+						]),
+						$timeout
+					);
 				}
 				catch (\Exception $e)
 				{
-					$errors[] = Text::sprintf('PLG_RADICALMART_MESSAGE_EMAIL_ERROR_ADMIN_EMAIL', $e->getMessage());
+					$errors[] = Text::sprintf('PLG_RADICALMART_MESSAGE_EMAIL_ERROR_ADMIN_EMAIL', $event, $e->getMessage());
 				}
 			}
 		}
@@ -268,13 +276,15 @@ class Email extends CMSPlugin implements SubscriberInterface
 			$subject   = Text::sprintf('PLG_RADICALMART_MESSAGE_EMAIL_USER_CREATE', $data['user']->name,
 				Uri::getInstance()->getHost());
 			$recipient = $data['user']->email;
+
 			try
 			{
-				$this->sendEmail($subject, $recipient, $layoutsHelper::renderSiteLayout($layout, ['user' => $data]));
+				$this->sendEmail($subject, $recipient,
+					$layoutsHelper::renderSiteLayout($layout, ['user' => $data]));
 			}
 			catch (\Exception $e)
 			{
-				$errors[] = Text::sprintf('PLG_RADICALMART_MESSAGE_EMAIL_ERROR_CUSTOMER_EMAIL', $e->getMessage());
+				$errors[] = Text::sprintf('PLG_RADICALMART_MESSAGE_EMAIL_ERROR_CUSTOMER_EMAIL', $type, $e->getMessage());
 			}
 		}
 
@@ -298,6 +308,7 @@ class Email extends CMSPlugin implements SubscriberInterface
 	 * @param   string        $subject    The email subject.
 	 * @param   array|string  $recipient  The email recipient.
 	 * @param   string        $body       The email message body.
+	 * @param   int           $timeout    Send mail timeout.
 	 *
 	 *
 	 * @throws /Exception
@@ -306,7 +317,7 @@ class Email extends CMSPlugin implements SubscriberInterface
 	 *
 	 * @since  1.0.0
 	 */
-	protected function sendEmail(string $subject, $recipient, string $body): bool
+	protected function sendEmail(string $subject, $recipient, string $body, int $timeout = 15): bool
 	{
 		if (empty($body))
 		{
@@ -341,6 +352,7 @@ class Email extends CMSPlugin implements SubscriberInterface
 		$mailer->setSubject($subject);
 		$mailer->isHtml();
 		$mailer->Encoding = 'base64';
+		$mailer->Timeout  = $timeout;
 		$mailer->addRecipient($recipient);
 		$mailer->setBody($body);
 

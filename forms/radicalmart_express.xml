@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form addfieldprefix="Joomla\Component\RadicalMartExpress\Administrator\Field">
 	<fieldset name="messages_email" label="PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_FIELDSET">
+		<field name="messages_email_timeout" type="number"
+			   label="PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_TIMEOUT"
+			   default="15"/>
 		<field name="messages_email_customer" type="events"
 			   label="PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_CUSTOMER"
 			   hint="PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_CUSTOMER_HINT"
