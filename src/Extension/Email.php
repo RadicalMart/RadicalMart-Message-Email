@@ -248,6 +248,23 @@ class Email extends CMSPlugin implements SubscriberInterface
 		elseif (strpos($type, '.user.create') !== false && !empty($data['result']))
 		{
 			// Send new customer data email
+			$availableEvents = $params->get('messages_email_customer', []);
+			$send            = false;
+			if (empty($availableEvents))
+			{
+				$send = true;
+			}
+			elseif (!in_array(-1, $availableEvents)
+				&& (in_array(0, $availableEvents) || in_array($type, $availableEvents)))
+			{
+				$send = true;
+			}
+
+			if (!$send)
+			{
+				return;
+			}
+
 			$subject   = Text::sprintf('PLG_RADICALMART_MESSAGE_EMAIL_USER_CREATE', $data['user']->name,
 				Uri::getInstance()->getHost());
 			$recipient = $data['user']->email;
@@ -294,6 +311,27 @@ class Email extends CMSPlugin implements SubscriberInterface
 		if (empty($body))
 		{
 			throw new \Exception(Text::_('PLG_RADICALMART_MESSAGE_EMAIL_ERROR_EMPTY_BODY'));
+		}
+
+		// Check recipients
+		if (is_array($recipient))
+		{
+			foreach ($recipient as $r => $value)
+			{
+				if (strpos($value, '_rm_ace@') !== false)
+				{
+					unset($recipient[$r]);
+				}
+			}
+		}
+		elseif (strpos($recipient, '_rm_ace@') !== false)
+		{
+			$recipient = null;
+		}
+
+		if (empty($recipient))
+		{
+			throw new \Exception(Text::_('PLG_RADICALMART_MESSAGE_EMAIL_ERROR_EMPTY_RECIPIENT'));
 		}
 
 		$config = $this->app->getConfig();
