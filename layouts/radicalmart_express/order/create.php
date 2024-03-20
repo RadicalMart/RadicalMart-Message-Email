@@ -11,7 +11,7 @@
 
 defined('_JEXEC') or die;
 
-echo \Joomla\Component\RadicalMart\Administrator\Helper\LayoutsHelper::renderSiteLayout(
+echo \Joomla\Component\RadicalMartExpress\Administrator\Helper\LayoutsHelper::renderSiteLayout(
 	'plugins.radicalmart_message.email.radicalmart_express.order.change_status',
 	$displayData
 );
