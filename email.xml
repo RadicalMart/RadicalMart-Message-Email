@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="4.2" type="plugin" group="radicalmart_message" method="upgrade">
+<extension type="plugin" group="radicalmart_message" method="upgrade">
 	<name>PLG_RADICALMART_MESSAGE_EMAIL</name>
 	<author>Delo Design</author>
 	<creationDate>April 2023</creationDate>
@@ -12,10 +12,10 @@
 	<scriptfile>script.php</scriptfile>
 	<namespace path="src">Joomla\Plugin\RadicalMartMessage\Email</namespace>
 	<languages folder="language">
-		<language tag="en-GB">en-GB/en-GB.plg_radicalmart_message_email.ini</language>
-		<language tag="en-GB">en-GB/en-GB.plg_radicalmart_message_email.sys.ini</language>
-		<language tag="ru-RU">ru-RU/ru-RU.plg_radicalmart_message_email.ini</language>
-		<language tag="ru-RU">ru-RU/ru-RU.plg_radicalmart_message_email.sys.ini</language>
+		<language tag="en-GB">en-GB/plg_radicalmart_message_email.ini</language>
+		<language tag="en-GB">en-GB/plg_radicalmart_message_email.sys.ini</language>
+		<language tag="ru-RU">ru-RU/plg_radicalmart_message_email.ini</language>
+		<language tag="ru-RU">ru-RU/plg_radicalmart_message_email.sys.ini</language>
 	</languages>
 	<files>
 		<folder>forms</folder>

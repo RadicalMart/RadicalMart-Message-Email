@@ -164,7 +164,7 @@ class Email extends CMSPlugin implements SubscriberInterface
 			// Orders messages
 			$subject = (strpos($type, '.create') !== false)
 				? Text::sprintf('PLG_RADICALMART_MESSAGE_EMAIL_ORDER_CREATE', $data->number)
-				: Text::sprintf('PLG_RADICALMART_MESSAGE_EMAIL_ORDER_CHANGE_STATUS', $data->number, Text::_($data->status->title));
+				: Text::sprintf('PLG_RADICALMART_MESSAGE_EMAIL_ORDER_CHANGE_STATUS', Text::_($data->status->title), $data->number);
 			$event   = (strpos($type, '.create') !== false) ? $type : $type . '.' . $data->status->id;
 
 			// Send customer email

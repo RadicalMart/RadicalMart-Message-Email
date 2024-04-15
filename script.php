@@ -73,7 +73,9 @@ return new class () implements ServiceProviderInterface {
 			 *
 			 * @since  2.0.0
 			 */
-			protected array $updateMethods = [];
+			protected array $updateMethods = [
+				'update2_0_1'
+			];
 
 			/**
 			 * Constructor.
@@ -277,7 +279,6 @@ return new class () implements ServiceProviderInterface {
 				$this->db->updateObject('#__extensions', $plugin, ['type', 'element', 'folder']);
 			}
 
-
 			/**
 			 * Method to parse through a layouts element of the installation manifest and take appropriate action.
 			 *
@@ -382,6 +383,33 @@ return new class () implements ServiceProviderInterface {
 				}
 
 				return true;
+			}
+
+			/**
+			 * Method to update to 2.0.1 version.
+			 *
+			 * @since  __DEPLOY_VERSION__
+			 */
+			protected function update2_0_1()
+			{
+				$folders = [
+					Path::clean(JPATH_ROOT . '/administrator/language/en-GB'),
+					Path::clean(JPATH_ROOT . '/administrator/language/ru-RU'),
+				];
+
+				// Remove old language files
+				foreach ($folders as $folder)
+				{
+					$files = Folder::files($folder, '.plg_radicalmart_message_email.', true, true);
+
+					foreach ($files as $file)
+					{
+						if (strpos($file, '.plg_radicalmart_message_email.') !== false)
+						{
+							File::delete($file);
+						}
+					}
+				}
 			}
 		});
 	}
