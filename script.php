@@ -1,6 +1,6 @@
 <?php
 /*
- * @package     RadicalMart Payment Payselection Plugin
+ * @package     RadicalMart Messages Email Plugin
  * @subpackage  PLG_RADICALMART_MESSAGE_EMAIL
  * @version     __DEPLOY_VERSION__
  * @author      RadicalMart Team - radicalmart.ru
