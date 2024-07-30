@@ -19,6 +19,9 @@
 			<option value="radicalmart.user.create">
 				PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_EVENTS_USER_CREATE
 			</option>
+			<option value="radicalmart.user.login.code">
+				PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_EVENTS_USER_LOGIN_CODE
+			</option>
 			<option value="radicalmart.order.create">
 				PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_EVENTS_ORDER_CREATE
 			</option>

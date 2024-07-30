@@ -126,6 +126,7 @@ class Email extends CMSPlugin implements SubscriberInterface
 		// Check types
 		if (!in_array($type, [
 			'radicalmart.user.create',
+			'radicalmart.user.login.code',
 			'radicalmart.order.create',
 			'radicalmart.order.change_status',
 			'radicalmart_express.user.create',
@@ -281,6 +282,26 @@ class Email extends CMSPlugin implements SubscriberInterface
 			{
 				$this->sendEmail($subject, $recipient,
 					$layoutsHelper::renderSiteLayout($layout, ['user' => $data]));
+			}
+			catch (\Exception $e)
+			{
+				$errors[] = Text::sprintf('PLG_RADICALMART_MESSAGE_EMAIL_ERROR_CUSTOMER_EMAIL', $type, $e->getMessage());
+			}
+		}
+		elseif ($type === 'radicalmart.user.login.code' && !empty($data['code']))
+		{
+			try
+			{
+				if (empty($data['user']) || empty($data['user']->email))
+				{
+					throw new \Exception(Text::_('PLG_RADICALMART_MESSAGE_EMAIL_ERROR_EMPTY_RECIPIENT'));
+				}
+
+				$subject = Text::sprintf('PLG_RADICALMART_MESSAGE_EMAIL_USER_LOGIN_CODE', $data['user']->name,
+					Uri::getInstance()->getHost());
+
+				$this->sendEmail($subject, $data['user']->email,
+					$layoutsHelper::renderSiteLayout($layout, $data));
 			}
 			catch (\Exception $e)
 			{

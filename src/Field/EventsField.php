@@ -57,8 +57,6 @@ class EventsField extends ListField
 			{
 				$this->extension = $extension;
 			}
-
-
 		}
 
 		return $return;
