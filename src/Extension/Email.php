@@ -224,7 +224,7 @@ class Email extends CMSPlugin implements SubscriberInterface
 			$administrators = ArrayHelper::fromObject($params->get('messages_email_admin', new \stdClass()));
 			if (empty($administrators))
 			{
-				$config = $this->app->getConfig();
+				$config = $this->getApplication()->getConfig();
 				if (!empty($config->get('replyto')))
 				{
 					$recipient[] = $config->get('replyto');
