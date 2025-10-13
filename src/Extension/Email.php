@@ -382,9 +382,8 @@ class Email extends CMSPlugin implements SubscriberInterface
 			throw new \Exception(Text::_('PLG_RADICALMART_MESSAGE_EMAIL_ERROR_EMPTY_RECIPIENT'));
 		}
 
-		$config = $this->app->getConfig();
-
-		$mailer = Factory::getContainer()->get(MailerFactoryInterface::class)->createMailer();
+		$config = $this->getApplication()->getConfig();
+		$mailer = Factory::getContainer()->get(MailerFactoryInterface::class)->createMailer($config);
 		$mailer->setSender([$config->get('mailfrom'), $config->get('fromname')]);
 		$mailer->setSubject($subject);
 		$mailer->isHtml();
