@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form addfieldprefix="Joomla\Component\RadicalMart\Administrator\Field">
-	<fieldset name="messages_email" label="PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_FIELDSET">
+	<fieldset name="messages_email_global" label="PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_GLOBAL">
+		<field name="messages_email_enabled" type="radio"
+			   label="PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_ENABLED"
+			   class="btn-group btn-group-yesno"
+			   default="1">
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
 		<field name="messages_email_timeout" type="number"
 			   label="PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_TIMEOUT"
 			   default="15"/>
+	</fieldset>
+	<fieldset name="messages_email_customer" label="PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_CUSTOMER">
 		<field name="messages_email_customer" type="events"
 			   label="PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_CUSTOMER"
 			   hint="PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_CUSTOMER_HINT"
@@ -12,7 +21,7 @@
 			   addfieldprefix="Joomla\Plugin\RadicalMartMessage\Email\Field"
 			   layout="joomla.form.field.list-fancy-select"
 			   parentclass="stack"
-			   labelclass="mb-1"
+			   hiddenLabel="true"
 			   default="0">
 			<option value="0">PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_EVENTS_ALL</option>
 			<option value="-1">PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_EVENTS_NONE</option>
@@ -26,12 +35,15 @@
 				PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_EVENTS_ORDER_CREATE
 			</option>
 		</field>
+	</fieldset>
+	<fieldset name="messages_email_admin" label="PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_ADMIN">
 		<field name="messages_email_admin" type="subform"
 			   label="PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_ADMIN"
 			   description="PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_ADMIN_DESCRIPTION"
 			   multiple="true"
 			   parentclass="stack"
-			   labelclass="mb-1">
+			   buttons="add,remove"
+			   hiddenLabel="true">
 			<form>
 				<field name="email" type="email"
 					   label="COM_RADICALMART_EMAIL"

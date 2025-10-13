@@ -17,6 +17,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
+use Joomla\CMS\Mail\MailerFactoryInterface;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Component\RadicalMart\Administrator\Helper\LayoutsHelper as RadicalMartLayoutsHelper;
@@ -36,15 +37,6 @@ class Email extends CMSPlugin implements SubscriberInterface
 	 * @since  1.0.0
 	 */
 	protected $autoloadLanguage = true;
-
-	/**
-	 * Loads the application object.
-	 *
-	 * @var  \Joomla\CMS\Application\CMSApplication
-	 *
-	 * @since  1.0.0
-	 */
-	protected $app = null;
 
 	/**
 	 * Enable on RadicalMart
@@ -75,6 +67,7 @@ class Email extends CMSPlugin implements SubscriberInterface
 	{
 		return [
 			'onRadicalMartPrepareConfigForm'        => 'onRadicalMartPrepareConfigForm',
+			'onRadicalMartPrepareConfigGroups'      => 'onRadicalMartPrepareConfigGroups',
 			'onRadicalMartSendMessage'              => 'onSendMessage',
 			'onRadicalMartExpressPrepareConfigForm' => 'onRadicalMartExpressPrepareConfigForm',
 			'onRadicalMartExpressSendMessage'       => 'onSendMessage',
@@ -91,9 +84,32 @@ class Email extends CMSPlugin implements SubscriberInterface
 	 *
 	 * @since  1.1.0
 	 */
-	public function onRadicalMartPrepareConfigForm(Form $form, $data = [])
+	public function onRadicalMartPrepareConfigForm(Form $form, mixed $data = []): void
 	{
 		$form->loadFile(JPATH_PLUGINS . '/radicalmart_message/email/forms/radicalmart.xml');
+	}
+
+	/**
+	 * Metho to add config sections to RadicalMart 3 config.
+	 *
+	 * @param   array  $groups  Current groups array
+	 *
+	 * @return void
+	 *
+	 * @since __DEPLOY_VERSION__
+	 */
+	public function onRadicalMartPrepareConfigGroups(array &$groups): void
+	{
+		$groups['messages']['sections']['email'] = [
+			'title'     => 'PLG_RADICALMART_MESSAGE_EMAIL_PARAMS',
+			'key'       => 'messages-email',
+			'type'      => 'fieldsets',
+			'fieldsets' => [
+				'messages_email_global',
+				'messages_email_customer',
+				'messages_email_admin'
+			]
+		];
 	}
 
 	/**
@@ -106,7 +122,7 @@ class Email extends CMSPlugin implements SubscriberInterface
 	 *
 	 * @since  1.1.0
 	 */
-	public function onRadicalMartExpressPrepareConfigForm(Form $form, $data = [])
+	public function onRadicalMartExpressPrepareConfigForm(Form $form, mixed $data = []): void
 	{
 		$form->loadFile(JPATH_PLUGINS . '/radicalmart_message/email/forms/radicalmart_express.xml');
 	}
@@ -121,7 +137,7 @@ class Email extends CMSPlugin implements SubscriberInterface
 	 *
 	 * @since  2.0.0
 	 */
-	public function onSendMessage(string $type, $data = null)
+	public function onSendMessage(string $type, mixed $data = null): void
 	{
 		// Check types
 		if (!in_array($type, [
@@ -140,33 +156,33 @@ class Email extends CMSPlugin implements SubscriberInterface
 		// Get layouts helper
 		$layoutsHelper = false;
 		$params        = false;
-		if (strpos($type, 'radicalmart.') !== false)
+		if (str_contains($type, 'radicalmart.'))
 		{
 			$layoutsHelper = RadicalMartLayoutsHelper::class;
 			$params        = RadicalMartParamsHelper::getComponentParams();
 		}
-		elseif (strpos($type, 'radicalmart_express.') !== false)
+		elseif (str_contains($type, 'radicalmart_express.'))
 		{
 			$layoutsHelper = RadicalMartExpressLayoutsHelper::class;
 			$params        = RadicalMartExpressParamsHelper::getComponentParams();
 		}
-		$timeout = (int) $params->get('messages_email_timeout', 15);
 
-		if (!$layoutsHelper)
+		if (!$layoutsHelper || (int) $params->get('messages_email_enabled', 1) === 0)
 		{
 			return;
 		}
 
-		$errors = [];
-		$layout = 'plugins.radicalmart_message.email.' . $type;
+		$timeout = (int) $params->get('messages_email_timeout', 15);
+		$errors  = [];
+		$layout  = 'plugins.radicalmart_message.email.' . $type;
 
-		if (strpos($type, '.order.') !== false)
+		if (str_contains($type, '.order.'))
 		{
 			// Orders messages
-			$subject = (strpos($type, '.create') !== false)
+			$subject = (str_contains($type, '.create'))
 				? Text::sprintf('PLG_RADICALMART_MESSAGE_EMAIL_ORDER_CREATE', $data->number)
 				: Text::sprintf('PLG_RADICALMART_MESSAGE_EMAIL_ORDER_CHANGE_STATUS', Text::_($data->status->title), $data->number);
-			$event   = (strpos($type, '.create') !== false) ? $type : $type . '.' . $data->status->id;
+			$event   = (str_contains($type, '.create')) ? $type : $type . '.' . $data->status->id;
 
 			// Send customer email
 			if (!empty($data->contacts['email']))
@@ -254,7 +270,7 @@ class Email extends CMSPlugin implements SubscriberInterface
 				}
 			}
 		}
-		elseif (strpos($type, '.user.create') !== false && !empty($data['result']))
+		elseif (str_contains($type, '.user.create') && !empty($data['result']))
 		{
 			// Send new customer data email
 			$availableEvents = $params->get('messages_email_customer', []);
@@ -338,7 +354,7 @@ class Email extends CMSPlugin implements SubscriberInterface
 	 *
 	 * @since  1.0.0
 	 */
-	protected function sendEmail(string $subject, $recipient, string $body, int $timeout = 15): bool
+	protected function sendEmail(string $subject, array|string $recipient, string $body, int $timeout = 15): bool
 	{
 		if (empty($body))
 		{
@@ -350,13 +366,13 @@ class Email extends CMSPlugin implements SubscriberInterface
 		{
 			foreach ($recipient as $r => $value)
 			{
-				if (strpos($value, '_rm_ace@') !== false)
+				if (str_contains($value, '_rm_ace@'))
 				{
 					unset($recipient[$r]);
 				}
 			}
 		}
-		elseif (strpos($recipient, '_rm_ace@') !== false)
+		elseif (str_contains($recipient, '_rm_ace@'))
 		{
 			$recipient = null;
 		}
@@ -368,7 +384,7 @@ class Email extends CMSPlugin implements SubscriberInterface
 
 		$config = $this->app->getConfig();
 
-		$mailer = Factory::getMailer();
+		$mailer = Factory::getContainer()->get(MailerFactoryInterface::class)->createMailer();
 		$mailer->setSender([$config->get('mailfrom'), $config->get('fromname')]);
 		$mailer->setSubject($subject);
 		$mailer->isHtml();

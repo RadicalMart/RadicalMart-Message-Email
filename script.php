@@ -13,9 +13,6 @@
 
 use Joomla\CMS\Application\AdministratorApplication;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
-use Joomla\CMS\Filesystem\Path;
 use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\Installer\InstallerAdapter;
 use Joomla\CMS\Installer\InstallerScriptInterface;
@@ -25,9 +22,12 @@ use Joomla\CMS\Version;
 use Joomla\Database\DatabaseDriver;
 use Joomla\DI\Container;
 use Joomla\DI\ServiceProviderInterface;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
+use Joomla\Filesystem\Path;
 
 return new class () implements ServiceProviderInterface {
-	public function register(Container $container)
+	public function register(Container $container): void
 	{
 		$container->set(InstallerScriptInterface::class, new class ($container->get(AdministratorApplication::class)) implements InstallerScriptInterface {
 			/**
@@ -73,9 +73,7 @@ return new class () implements ServiceProviderInterface {
 			 *
 			 * @since  2.0.0
 			 */
-			protected array $updateMethods = [
-				'update2_0_1'
-			];
+			protected array $updateMethods = [];
 
 			/**
 			 * Constructor.
@@ -289,7 +287,7 @@ return new class () implements ServiceProviderInterface {
 			 *
 			 * @since  1.2.0
 			 */
-			public function parseLayouts(SimpleXMLElement $element = null, Installer $installer = null): bool
+			public function parseLayouts(?SimpleXMLElement $element = null, ?Installer $installer = null): bool
 			{
 				if (!$element || !count($element->children()))
 				{
@@ -340,7 +338,7 @@ return new class () implements ServiceProviderInterface {
 			 *
 			 * @since  1.2.0
 			 */
-			protected function removeLayouts(SimpleXMLElement $element = null): bool
+			protected function removeLayouts(?SimpleXMLElement $element = null): bool
 			{
 				if (!$element || !count($element->children()))
 				{
@@ -383,33 +381,6 @@ return new class () implements ServiceProviderInterface {
 				}
 
 				return true;
-			}
-
-			/**
-			 * Method to update to 2.0.1 version.
-			 *
-			 * @since  2.0.1
-			 */
-			protected function update2_0_1()
-			{
-				$folders = [
-					Path::clean(JPATH_ROOT . '/administrator/language/en-GB'),
-					Path::clean(JPATH_ROOT . '/administrator/language/ru-RU'),
-				];
-
-				// Remove old language files
-				foreach ($folders as $folder)
-				{
-					$files = Folder::files($folder, '.plg_radicalmart_message_email.', true, true);
-
-					foreach ($files as $file)
-					{
-						if (strpos($file, '.plg_radicalmart_message_email.') !== false)
-						{
-							File::delete($file);
-						}
-					}
-				}
 			}
 		});
 	}

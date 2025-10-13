@@ -94,7 +94,7 @@ class EventsField extends ListField
 	 *
 	 * @since  2.0.0
 	 */
-	protected function setRadicalMartStatuses(array &$options)
+	protected function setRadicalMartStatuses(array &$options): void
 	{
 		$db    = $this->getDatabase();
 		$query = $db->getQuery(true)
@@ -121,7 +121,7 @@ class EventsField extends ListField
 	 *
 	 * @since  2.0.0
 	 */
-	protected function setRadicalMartExpressStatuses(array &$options)
+	protected function setRadicalMartExpressStatuses(array &$options): void
 	{
 		$new        = new \stdClass();
 		$new->value = 'radicalmart_express.order.change_status.1';
