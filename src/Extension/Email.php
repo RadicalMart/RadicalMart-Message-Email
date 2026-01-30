@@ -172,9 +172,18 @@ class Email extends CMSPlugin implements SubscriberInterface
 			return;
 		}
 
+		$sender  = [
+			'email' => $params->get('messages_email_sender_email'),
+			'name'  => $params->get('messages_email_sender_name'),
+		];
+		$replyTo = [
+			'email' => $params->get('messages_email_reply_email'),
+			'name'  => $params->get('messages_email_reply_name'),
+		];
 		$timeout = (int) $params->get('messages_email_timeout', 15);
-		$errors  = [];
-		$layout  = 'plugins.radicalmart_message.email.' . $type;
+
+		$errors = [];
+		$layout = 'plugins.radicalmart_message.email.' . $type;
 
 		if (str_contains($type, '.order.'))
 		{
@@ -208,7 +217,7 @@ class Email extends CMSPlugin implements SubscriberInterface
 								'order'     => $data,
 								'params'    => $params,
 							]),
-							$timeout
+							$sender, $replyTo, $timeout,
 						);
 					}
 					catch (\Exception $e)
@@ -261,7 +270,7 @@ class Email extends CMSPlugin implements SubscriberInterface
 							'order'     => $data,
 							'params'    => $params,
 						]),
-						$timeout
+						$sender, $replyTo, $timeout,
 					);
 				}
 				catch (\Exception $e)
@@ -317,7 +326,9 @@ class Email extends CMSPlugin implements SubscriberInterface
 					Uri::getInstance()->getHost());
 
 				$this->sendEmail($subject, $data['user']->email,
-					$layoutsHelper::renderSiteLayout($layout, $data));
+					$layoutsHelper::renderSiteLayout($layout, $data),
+					$sender, $replyTo, $timeout,
+				);
 			}
 			catch (\Exception $e)
 			{
@@ -345,16 +356,19 @@ class Email extends CMSPlugin implements SubscriberInterface
 	 * @param   string        $subject    The email subject.
 	 * @param   array|string  $recipient  The email recipient.
 	 * @param   string        $body       The email message body.
+	 * @param   array         $sender     Sender data.
+	 * @param   array         $replyTo    Reply To data.
 	 * @param   int           $timeout    Send mail timeout.
 	 *
-	 *
-	 * @throws /Exception
+	 * @throws \Exception
 	 *
 	 * @return bool True on success, False on failure.
 	 *
 	 * @since  1.0.0
 	 */
-	protected function sendEmail(string $subject, array|string $recipient, string $body, int $timeout = 15): bool
+	protected function sendEmail(string $subject, array|string $recipient, string $body,
+	                             array  $sender = [], array $replyTo = [],
+	                             int    $timeout = 15): bool
 	{
 		if (empty($body))
 		{
@@ -383,8 +397,32 @@ class Email extends CMSPlugin implements SubscriberInterface
 		}
 
 		$config = $this->getApplication()->getConfig();
+		if (empty($sender['email']))
+		{
+			$sender['email'] = $config->get('mailfrom');
+		}
+
+		if (empty($sender['name']))
+		{
+			$sender['name'] = $config->get('fromname');
+		}
+
+		if (empty($replyTo['email']) && !empty($config->get('replyto')))
+		{
+			$replyTo['email'] = $config->get('replyto');
+		}
+		if (empty($replyTo['name']))
+		{
+			$replyTo['name'] = $config->get('replytoname');
+		}
+
+		/** @var \Joomla\CMS\Mail\Mail $mailer */
 		$mailer = Factory::getContainer()->get(MailerFactoryInterface::class)->createMailer($config);
-		$mailer->setSender([$config->get('mailfrom'), $config->get('fromname')]);
+		$mailer->setSender($sender['email'], $sender['name']);
+		if (!empty($replyTo['email']))
+		{
+			$mailer->addReplyTo($replyTo['email'], $replyTo['name']);
+		}
 		$mailer->setSubject($subject);
 		$mailer->isHtml();
 		$mailer->Encoding = 'base64';

@@ -8,6 +8,14 @@
 			<option value="1">JYES</option>
 			<option value="0">JNO</option>
 		</field>
+		<field name="messages_email_sender_email" type="text"
+			   label="PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_SENDER_EMAIL"/>
+		<field name="messages_email_sender_name" type="text"
+			   label="PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_SENDER_NAME"/>
+		<field name="messages_email_reply_email" type="text"
+			   label="PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_REPLY_EMAIL"/>
+		<field name="messages_email_reply_name" type="text"
+			   label="PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_REPLY_NAME"/>
 		<field name="messages_email_timeout" type="number"
 			   label="PLG_RADICALMART_MESSAGE_EMAIL_PARAMS_TIMEOUT"
 			   default="15"/>
