@@ -4,7 +4,7 @@
  * @subpackage  plg_radicalmart_message_email
  * @version     __DEPLOY_VERSION__
  * @author      RadicalMart Team - radicalmart.ru
- * @copyright   Copyright (c) 2024 RadicalMart. All rights reserved.
+ * @copyright   Copyright (c) 2026 RadicalMart. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
  * @link        https://radicalmart.ru/
  */
@@ -34,7 +34,7 @@ class EventsField extends ListField
 	 *
 	 * @since  2.0.0
 	 */
-	protected $extension = null;
+	protected ?string $extension = null;
 
 	/**
 	 * Method to attach a Form object to the field.
@@ -49,17 +49,19 @@ class EventsField extends ListField
 	 */
 	public function setup(\SimpleXMLElement $element, $value, $group = null): bool
 	{
-		if ($return = parent::setup($element, $value, $group))
+		if (!parent::setup($element, $value, $group))
 		{
-			$extension = (!empty($this->element['extension'])) ? (string) $this->element['extension']
-				: null;
-			if (!empty($extension) && in_array($extension, ['com_radicalmart', 'com_radicalmart_express']))
-			{
-				$this->extension = $extension;
-			}
+			return false;
 		}
 
-		return $return;
+		$extension = (!empty($this->element['extension'])) ? (string) $this->element['extension']
+			: null;
+		if (!empty($extension) && in_array($extension, ['com_radicalmart', 'com_radicalmart_express']))
+		{
+			$this->extension = $extension;
+		}
+
+		return true;
 	}
 
 	/**

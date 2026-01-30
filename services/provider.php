@@ -4,7 +4,7 @@
  * @subpackage  PLG_RADICALMART_MESSAGE_EMAIL
  * @version     __DEPLOY_VERSION__
  * @author      RadicalMart Team - radicalmart.ru
- * @copyright   Copyright (c) 2024 RadicalMart. All rights reserved.
+ * @copyright   Copyright (c) 2026 RadicalMart. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
  * @link        https://radicalmart.ru/
  */
@@ -32,11 +32,14 @@ return new class implements ServiceProviderInterface {
 	{
 		$container->set(PluginInterface::class,
 			function (Container $container) {
-				$plugin  = PluginHelper::getPlugin('radicalmart_message', 'email');
+				// Create plugin class
 				$subject = $container->get(DispatcherInterface::class);
+				$config  = (array) PluginHelper::getPlugin('radicalmart_message', 'email');
+				$plugin  = new Email($subject, $config);
 
-				$plugin = new Email($subject, (array) $plugin);
-				$plugin->setApplication(Factory::getApplication());
+				// Set application
+				$app = Factory::getApplication();
+				$plugin->setApplication($app);
 
 				return $plugin;
 			}

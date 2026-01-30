@@ -2,8 +2,8 @@
 <extension type="plugin" group="radicalmart_message" method="upgrade">
 	<name>PLG_RADICALMART_MESSAGE_EMAIL</name>
 	<author>Delo Design</author>
-	<creationDate>December 2025</creationDate>
-	<copyright>Copyright © 2024 RadicalMart. All rights reserved.</copyright>
+	<creationDate>January 2026</creationDate>
+	<copyright>Copyright © 2026 RadicalMart. All rights reserved.</copyright>
 	<license>https://www.gnu.org/copyleft/gpl.html GNU/GPL</license>
 	<authorEmail>info@radicalmart.ru</authorEmail>
 	<authorUrl>https://radicalmart.ru</authorUrl>
